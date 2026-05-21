@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Calculadora Acceso Universidades CyL</title>
+<style>
+  :root {
+    --brand: #1a56a0;
+    --brand-light: #e8f0fc;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --yellow: #d97706;
+    --yellow-light: #fef3c7;
+    --gray: #f3f4f6;
+    --border: #e5e7eb;
+    --text: #111827;
+    --muted: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; color: var(--text); background: #f9fafb; }
+
+  header {
+    background: linear-gradient(135deg, #1a56a0 0%, #0e3a6e 100%);
+    color: white; padding: 24px 32px;
+  }
+  header h1 { font-size: 1.5rem; font-weight: 700; }
+  header p { font-size: 0.875rem; opacity: 0.8; margin-top: 4px; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  .card {
+    background: white; border-radius: 12px; border: 1px solid var(--border);
+    padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--brand); }
+
+  .selector-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .selector-row > * { flex: 1; min-width: 180px; }
+  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
+  select, input[type=number] {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.95rem; background: white;
+    transition: border-color .15s;
+  }
+  select:focus, input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-light); }
+
+  .notas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .nota-field input { text-align: center; font-size: 1.1rem; font-weight: 600; }
+
+  .resultado-box {
+    text-align: center; padding: 20px;
+    border-radius: 10px; background: var(--brand-light);
+    margin-bottom: 20px;
+  }
+  .resultado-box .nota-final { font-size: 3rem; font-weight: 800; color: var(--brand); line-height: 1; }
+  .resultado-box .nota-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+  .resultado-box .nota-corte-row { margin-top: 12px; font-size: 0.95rem; }
+
+  .badge {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-weight: 700; font-size: 0.9rem;
+  }
+  .badge.accede { background: var(--green-light); color: var(--green); }
+  .badge.no-accede { background: var(--red-light); color: var(--red); }
+  .badge.cerca { background: var(--yellow-light); color: var(--yellow); }
+
+  .univ-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .univ-table th {
+    text-align: left; padding: 8px 12px; font-size: 0.75rem; font-weight: 600;
+    color: var(--muted); text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 2px solid var(--border);
+  }
+  .univ-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .univ-table tr:last-child td { border-bottom: none; }
+  .univ-table tr.row-accede td { background: var(--green-light); }
+  .univ-table tr.row-cerca td { background: var(--yellow-light); }
+  .univ-table tr.row-no td { background: var(--red-light); }
+  .univ-table tr.row-sel td { font-weight: 700; }
+  .univ-table .corte-num { font-weight: 700; font-size: 1rem; }
+  .univ-table .diff-col { font-size: 0.82rem; }
+  .univ-table .diff-col.pos { color: var(--green); }
+  .univ-table .diff-col.neg { color: var(--red); }
+  .univ-table .diff-col.ntr { color: var(--yellow); }
+
+  .sim-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+  .sim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .sim-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+  .sim-card .sim-label { font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  .sim-card .sim-nota { font-size: 1.6rem; font-weight: 800; }
+  .sim-card .sim-nota.ok { color: var(--green); }
+  .sim-card .sim-nota.warn { color: var(--yellow); }
+  .sim-card .sim-nota.imposible { color: var(--red); }
+  .sim-card .sim-context { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-style: italic; }
+  .sim-card .sim-sub { font-size: 0.78rem; margin-top: 4px; }
+  .sim-card .ok-text { color: var(--green); }
+  .sim-card .warn-text { color: var(--red); }
+
+  .temas-asig { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .temas-asig:last-child { margin-bottom: 0; }
+  .temas-asig-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; background: var(--brand-light); cursor: pointer;
+    user-select: none;
+  }
+  .temas-asig-header:hover { background: #d4e4f7; }
+  .temas-asig-name { font-weight: 700; font-size: 0.95rem; color: var(--brand); flex: 1; }
+  .temas-pond-badge { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: white; color: var(--brand); border: 1px solid var(--brand); }
+  .temas-chevron { font-size: 0.7rem; color: var(--muted); transition: transform .2s; }
+  .temas-asig.open .temas-chevron { transform: rotate(180deg); }
+  .temas-body { display: none; padding: 12px 16px; }
+  .temas-asig.open .temas-body { display: block; }
+  .temas-list { list-style: none; padding: 0; margin: 0; }
+  .temas-list li {
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.875rem; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .temas-list li:last-child { border-bottom: none; }
+  .temas-freq { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 1px; }
+  .temas-freq.alta { background: #fce7f3; color: #be185d; }
+  .temas-freq.media { background: var(--brand-light); color: var(--brand); }
+  .temas-freq-legend { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; }
+
+  .formula-box {
+    background: var(--gray); border-radius: 8px; padding: 12px 16px;
+    font-size: 0.82rem; color: var(--muted); margin-top: 12px;
+  }
+  .formula-box code { color: var(--brand); font-weight: 600; font-size: 0.9rem; }
+
+  .esp-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .esp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .esp-item {
+    border: 2px solid var(--border); border-radius: 10px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, background .15s;
+  }
+  .esp-item.selected { border-color: var(--brand); background: var(--brand-light); }
+  .esp-item-top { display: flex; align-items: center; justify-content: space-between; }
+  .esp-item-name { font-size: 0.82rem; font-weight: 600; }
+  .esp-pond-badge {
+    font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+    background: var(--gray); color: var(--muted);
+  }
+  .esp-pond-badge.p02 { background: #fce7f3; color: #be185d; }
+  .esp-pond-badge.p01 { background: var(--brand-light); color: var(--brand); }
+  .esp-item input { text-align: center; font-size: 1rem; font-weight: 700; padding: 6px; border-radius: 6px; }
+  .esp-item.selected input { border-color: var(--brand); }
+  .esp-contrib { font-size: 0.75rem; color: var(--brand); font-weight: 600; min-height: 1em; }
+  .esp-auto-info {
+    margin-top: 10px; font-size: 0.82rem; color: var(--muted);
+    background: var(--gray); border-radius: 8px; padding: 8px 12px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 16px; }
+    .card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Calculadora de Acceso — Universidades de Castilla y León</h1>
+  <p>Calcula tu nota de admisión y simula qué necesitas en la EBAU para entrar al grado que quieres</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>1. Elige tu grado y universidad</h2>
+    <div class="selector-row">
+      <div>
+        <label for="sel-universidad">Universidad</label>
+        <select id="sel-universidad">
+          <option value="">Todas las universidades CyL</option>
+          <option value="UVA">UVA — Universidad de Valladolid</option>
+          <option value="USAL">USAL — Universidad de Salamanca</option>
+          <option value="UBU">UBU — Universidad de Burgos</option>
+          <option value="ULE">ULE — Universidad de León</option>
+        </select>
+      </div>
+      <div>
+        <label for="sel-grado">Grado</label>
+        <select id="sel-grado">
+          <option value="">— Selecciona un grado —</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Introduce tus notas</h2>
+    <div class="notas-grid">
+      <div class="nota-field">
+        <label for="n-bach">Nota de Bachillerato</label>
+        <input type="number" id="n-bach" min="0" max="10" step="0.001" placeholder="0 – 10">
+      </div>
+      <div class="nota-field">
+        <label for="n-ebau">Nota fase general EBAU</label>
+        <input type="number" id="n-ebau" min="0" max="10" step="0.001" placeholder="0 – 10">
+      </div>
+    </div>
+
+    <div id="esp-section" style="display:none; margin-top:20px;">
+      <div class="esp-title">Fase específica — asignaturas ponderadas para este grado</div>
+      <div class="esp-grid" id="esp-grid"></div>
+      <div class="esp-auto-info" id="esp-auto-info" style="display:none;"></div>
+    </div>
+
+    <div class="formula-box" style="margin-top:16px;">
+      Fórmula: <code>Nota admisión = 0.6 × Bach + 0.4 × EBAU + pond₁×Esp₁ + pond₂×Esp₂</code>
+      &nbsp;— la app elige las 2 asignaturas que más te suman.
+    </div>
+  </div>
+
+  <div class="card" id="resultado-card" style="display:none;">
+    <h2>3. Tu nota de admisión</h2>
+    <div class="resultado-box">
+      <div class="nota-final" id="res-nota">—</div>
+      <div class="nota-label">sobre 14 puntos máximos</div>
+      <div class="nota-corte-row" id="res-corte-row"></div>
+    </div>
+    <div id="res-breakdown" style="font-size:0.85rem;color:var(--muted);"></div>
+  </div>
+
+  <div class="card" id="univ-card" style="display:none;">
+    <h2>4. Comparativa de universidades — mismo grado</h2>
+    <table class="univ-table">
+      <thead>
+        <tr>
+          <th>Universidad</th>
+          <th>Corte</th>
+          <th>Tu nota</th>
+          <th>Diferencia</th>
+          <th>Esp. usadas</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="univ-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="card" id="sim-card" style="display:none;">
+    <h2>5. Simulador — ¿Qué nota mínima necesito?</h2>
+    <p class="sim-desc">
+      Deja en blanco la prueba que quieres simular y rellena el resto. Te diremos qué nota mínima necesitas en esa prueba para llegar al corte.
+    </p>
+    <div class="sim-grid" id="sim-resultados"></div>
+  </div>
+
+  <div class="card" id="temas-card" style="display:none;">
+    <h2>6. Temas frecuentes en la PAU CyL (2021–2024)</h2>
+    <p class="sim-desc">Bloques y contenidos que han aparecido con más frecuencia en los exámenes de selectividad de Castilla y León para las asignaturas ponderadas de este grado.</p>
+    <div id="temas-grid"></div>
+  </div>
+
+</div>
+
+<script>
+// Notas de corte 2025-2026. Fuente: notasdecorte.es
+// Corte 5.000 = sin lista de espera ese año (plazas sin cubrir).
+const GRADOS = [
+  // ── Ciencias de la Salud ──
+  { id: 1,   nombre: "Medicina",                                 universidad: "USAL", corte: 12.787, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 2,   nombre: "Medicina",                                 universidad: "UVA",  corte: 12.720, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 3,   nombre: "Odontología",                              universidad: "USAL", corte: 12.836, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
+  { id: 4,   nombre: "Farmacia",                                 universidad: "USAL", corte: 10.852, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 5,   nombre: "Veterinaria",                              universidad: "USAL", corte: 9.80,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 6,   nombre: "Veterinaria",                              universidad: "ULE",  corte: 11.420, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 7,   nombre: "Enfermería",                               universidad: "UVA",  corte: 11.392, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Física": 0.1 } },
+  { id: 8,   nombre: "Enfermería",                               universidad: "USAL", corte: 12.040, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 9,   nombre: "Enfermería",                               universidad: "UBU",  corte: 11.230, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 10,  nombre: "Enfermería",                               universidad: "ULE",  corte: 11.450, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 11,  nombre: "Fisioterapia",                             universidad: "UVA",  corte: 10.303, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
+  { id: 12,  nombre: "Fisioterapia",                             universidad: "USAL", corte: 11.591, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
+  { id: 13,  nombre: "Fisioterapia",                             universidad: "ULE",  corte: 10.744, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
+  { id: 14,  nombre: "Psicología",                               universidad: "UVA",  corte: 8.20,   ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2, "Matemáticas II": 0.1 } },
+  { id: 15,  nombre: "Psicología",                               universidad: "USAL", corte: 10.674, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
+  { id: 217, nombre: "Psicología",                               universidad: "UBU",  corte: 9.964,  ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
+  { id: 16,  nombre: "Nutrición y Dietética",                    universidad: "USAL", corte: 9.00,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 240, nombre: "Nutrición y Dietética",                    universidad: "UVA",  corte: 9.860,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 241, nombre: "Nutrición y Dietética",                    universidad: "ULE",  corte: 7.010,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 17,  nombre: "Terapia Ocupacional",                      universidad: "UVA",  corte: 5.000,  ponderaciones: { "Biología": 0.2 } },
+  { id: 239, nombre: "Terapia Ocupacional",                      universidad: "USAL", corte: 7.811,  ponderaciones: { "Biología": 0.2 } },
+  { id: 242, nombre: "Terapia Ocupacional",                      universidad: "UBU",  corte: 7.000,  ponderaciones: { "Biología": 0.2 } },
+  { id: 18,  nombre: "Óptica y Optometría",                      universidad: "UVA",  corte: 8.090,  ponderaciones: { "Física": 0.2, "Matemáticas II": 0.1 } },
+  { id: 243, nombre: "Logopedia",                                universidad: "UVA",  corte: 6.780,  ponderaciones: {} },
+  { id: 244, nombre: "Podología",                                universidad: "ULE",  corte: 7.910,  ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 245, nombre: "Biomedicina y Terapias Avanzadas",         universidad: "UVA",  corte: 12.769, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
+  { id: 246, nombre: "Ingeniería Biomédica",                     universidad: "UVA",  corte: 12.062, ponderaciones: { "Biología": 0.2, "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 247, nombre: "Ingeniería de la Salud",                   universidad: "UBU",  corte: 8.922,  ponderaciones: { "Biología": 0.2, "Matemáticas II": 0.1, "Física": 0.1 } },
+
+  // ── Ciencias ──
+  { id: 20,  nombre: "Biología",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 21,  nombre: "Biología",                                 universidad: "USAL", corte: 9.188,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 238, nombre: "Biología",                                 universidad: "ULE",  corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 23,  nombre: "Biotecnología",                            universidad: "USAL", corte: 12.468, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 248, nombre: "Biotecnología",                            universidad: "ULE",  corte: 11.704, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 22,  nombre: "Bioquímica",                               universidad: "USAL", corte: 8.20,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 24,  nombre: "Química",                                  universidad: "UVA",  corte: 5.854,  ponderaciones: { "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 25,  nombre: "Química",                                  universidad: "USAL", corte: 5.000,  ponderaciones: { "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 26,  nombre: "Física",                                   universidad: "UVA",  corte: 11.265, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 32,  nombre: "Física",                                   universidad: "USAL", corte: 11.990, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 27,  nombre: "Matemáticas",                              universidad: "UVA",  corte: 11.988, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 28,  nombre: "Matemáticas",                              universidad: "USAL", corte: 12.666, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 29,  nombre: "Geología",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Geología": 0.2, "Química": 0.1, "Biología": 0.1 } },
+  { id: 33,  nombre: "Geología",                                 universidad: "USAL", corte: 5.000,  ponderaciones: { "Geología": 0.2, "Química": 0.1, "Biología": 0.1 } },
+  { id: 30,  nombre: "Ciencia y Tecnología de los Alimentos",    universidad: "USAL", corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 249, nombre: "Ciencia y Tecnología de los Alimentos",    universidad: "ULE",  corte: 5.109,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 31,  nombre: "Estadística",                              universidad: "UVA",  corte: 9.238,  ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 34,  nombre: "Estadística",                              universidad: "USAL", corte: 6.506,  ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.1 } },
+
+  // ── Ingenierías ──
+  { id: 40,  nombre: "Ingeniería Informática",                   universidad: "UVA",  corte: 8.232,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 41,  nombre: "Ingeniería Informática",                   universidad: "USAL", corte: 8.846,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 42,  nombre: "Ingeniería Informática",                   universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 43,  nombre: "Ingeniería Informática",                   universidad: "ULE",  corte: 7.766,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 44,  nombre: "Ingeniería Industrial",                    universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 45,  nombre: "Ing. Mecánica",                            universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 226, nombre: "Ing. Mecánica",                            universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 223, nombre: "Ing. Mecánica",                            universidad: "ULE",  corte: 6.930,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 46,  nombre: "Ing. Electrónica Industrial",              universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 227, nombre: "Ing. Electrónica Industrial",              universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 47,  nombre: "Ing. Eléctrica",                           universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 224, nombre: "Ing. Eléctrica",                           universidad: "ULE",  corte: 5.110,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 48,  nombre: "Ing. Química",                             universidad: "UVA",  corte: 5.000,  ponderaciones: { "Química": 0.2, "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 49,  nombre: "Ing. de Telecomunicación",                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 54,  nombre: "Ing. de Organización Industrial",          universidad: "UVA",  corte: 9.453,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 250, nombre: "Ing. en Diseño Industrial",                universidad: "UVA",  corte: 9.708,  ponderaciones: { "Dibujo Técnico II": 0.2, "Matemáticas II": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 50,  nombre: "Ing. Agraria y del Medio Rural",           universidad: "UVA",  corte: 5.000,  ponderaciones: { "Biología": 0.1, "Química": 0.1, "Matemáticas II": 0.2 } },
+  { id: 225, nombre: "Ing. Agraria y del Medio Rural",           universidad: "ULE",  corte: 5.000,  ponderaciones: { "Biología": 0.1, "Química": 0.1, "Matemáticas II": 0.2 } },
+  { id: 51,  nombre: "Ing. Agrícola",                            universidad: "USAL", corte: 6.611,  ponderaciones: { "Biología": 0.1, "Química": 0.2 } },
+  { id: 52,  nombre: "Ing. Forestal",                            universidad: "UVA",  corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 53,  nombre: "Ing. Civil",                               universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 228, nombre: "Ing. Civil",                               universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 251, nombre: "Ing. Aeroespacial",                        universidad: "ULE",  corte: 12.669, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 252, nombre: "Ing. de Datos e Inteligencia Artificial",  universidad: "ULE",  corte: 10.786, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 253, nombre: "Matemática Aplicada y Computación",        universidad: "UBU",  corte: 10.066, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+
+  // ── Arquitectura ──
+  { id: 60,  nombre: "Fundamentos de Arquitectura",              universidad: "UVA",  corte: 8.949,  ponderaciones: { "Dibujo Técnico II": 0.2, "Matemáticas II": 0.2, "Fundamentos del Arte II": 0.1, "Diseño": 0.1 } },
+  { id: 61,  nombre: "Fundamentos de Arquitectura",              universidad: "USAL", corte: 7.500,  ponderaciones: { "Dibujo Técnico II": 0.2, "Matemáticas II": 0.2 } },
+
+  // ── Ciencias Sociales y Jurídicas ──
+  { id: 70,  nombre: "Derecho",                                  universidad: "UVA",  corte: 6.875,  ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 71,  nombre: "Derecho",                                  universidad: "USAL", corte: 9.103,  ponderaciones: { "Latín II": 0.2, "Griego II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 72,  nombre: "Derecho",                                  universidad: "UBU",  corte: 5.000,  ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 73,  nombre: "Derecho",                                  universidad: "ULE",  corte: 5.000,  ponderaciones: { "Latín II": 0.2, "Geografía": 0.1 } },
+  { id: 74,  nombre: "ADE",                                      universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 75,  nombre: "ADE",                                      universidad: "USAL", corte: 8.601,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 76,  nombre: "ADE",                                      universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 77,  nombre: "ADE",                                      universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 78,  nombre: "Economía",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.2 } },
+  { id: 79,  nombre: "Economía",                                 universidad: "USAL", corte: 9.040,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 256, nombre: "Comercio Internacional",                   universidad: "ULE",  corte: 9.274,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 80,  nombre: "Relaciones Laborales",                     universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
+  { id: 233, nombre: "Relaciones Laborales",                     universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
+  { id: 234, nombre: "Relaciones Laborales",                     universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
+  { id: 235, nombre: "Relaciones Laborales",                     universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
+  { id: 81,  nombre: "Trabajo Social",                           universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
+  { id: 210, nombre: "Trabajo Social",                           universidad: "USAL", corte: 5.000,  ponderaciones: {} },
+  { id: 211, nombre: "Trabajo Social",                           universidad: "UBU",  corte: 5.000,  ponderaciones: {} },
+  { id: 212, nombre: "Trabajo Social",                           universidad: "ULE",  corte: 5.000,  ponderaciones: {} },
+  { id: 82,  nombre: "Marketing",                                universidad: "UVA",  corte: 8.549,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 232, nombre: "Marketing",                                universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 254, nombre: "Marketing",                                universidad: "ULE",  corte: 8.464,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 83,  nombre: "Finanzas y Contabilidad",                  universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 231, nombre: "Finanzas y Contabilidad",                  universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 84,  nombre: "Turismo",                                  universidad: "UVA",  corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
+  { id: 207, nombre: "Turismo",                                  universidad: "USAL", corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
+  { id: 208, nombre: "Turismo",                                  universidad: "UBU",  corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
+  { id: 209, nombre: "Turismo",                                  universidad: "ULE",  corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
+  { id: 85,  nombre: "Educación Social",                         universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
+  { id: 213, nombre: "Educación Social",                         universidad: "USAL", corte: 5.000,  ponderaciones: {} },
+  { id: 214, nombre: "Educación Social",                         universidad: "UBU",  corte: 5.000,  ponderaciones: {} },
+  { id: 215, nombre: "Educación Social",                         universidad: "ULE",  corte: 7.333,  ponderaciones: {} },
+  { id: 86,  nombre: "Relaciones Internacionales",               universidad: "UVA",  corte: 9.248,  ponderaciones: { "Historia del Arte": 0.1, "Latín II": 0.1 } },
+  { id: 255, nombre: "Relaciones Internacionales",               universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.1, "Latín II": 0.1 } },
+  { id: 87,  nombre: "Ciencias Políticas",                       universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 88,  nombre: "Sociología",                               universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1 } },
+  { id: 89,  nombre: "Criminología",                             universidad: "UBU",  corte: 7.900,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
+  { id: 229, nombre: "Criminología",                             universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
+  { id: 230, nombre: "Criminología",                             universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
+  { id: 257, nombre: "Estudios Globales",                        universidad: "USAL", corte: 9.607,  ponderaciones: { "Historia del Arte": 0.1, "Geografía": 0.1 } },
+
+  // ── Humanidades ──
+  { id: 100, nombre: "Historia",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Griego II": 0.1, "Geografía": 0.1 } },
+  { id: 101, nombre: "Historia",                                 universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 236, nombre: "Historia",                                 universidad: "UBU",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 237, nombre: "Historia",                                 universidad: "ULE",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 102, nombre: "Historia del Arte",                        universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Fundamentos del Arte II": 0.2 } },
+  { id: 204, nombre: "Historia del Arte",                        universidad: "UVA",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Fundamentos del Arte II": 0.2 } },
+  { id: 103, nombre: "Filología Hispánica",                      universidad: "UVA",  corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.2, "Latín II": 0.1 } },
+  { id: 200, nombre: "Filología Hispánica",                      universidad: "USAL", corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.2, "Latín II": 0.1 } },
+  { id: 104, nombre: "Filología Inglesa",                        universidad: "UVA",  corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.1, "Latín II": 0.1 } },
+  { id: 201, nombre: "Filología Inglesa",                        universidad: "USAL", corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.1, "Latín II": 0.1 } },
+  { id: 105, nombre: "Filosofía",                                universidad: "USAL", corte: 5.000,  ponderaciones: { "Latín II": 0.1, "Griego II": 0.1 } },
+  { id: 106, nombre: "Geografía y Ordenación del Territorio",    universidad: "UVA",  corte: 5.000,  ponderaciones: { "Geografía": 0.2 } },
+  { id: 258, nombre: "Traducción e Interpretación",              universidad: "USAL", corte: 10.379, ponderaciones: { "Literatura Castellana": 0.2, "Latín II": 0.1 } },
+
+  // ── Educación ──
+  { id: 110, nombre: "Maestro Educación Infantil",               universidad: "UVA",  corte: 7.190,  ponderaciones: {} },
+  { id: 111, nombre: "Maestro Educación Infantil",               universidad: "USAL", corte: 9.305,  ponderaciones: {} },
+  { id: 218, nombre: "Maestro Educación Infantil",               universidad: "UBU",  corte: 6.770,  ponderaciones: {} },
+  { id: 220, nombre: "Maestro Educación Infantil",               universidad: "ULE",  corte: 8.729,  ponderaciones: {} },
+  { id: 112, nombre: "Maestro Educación Primaria",               universidad: "UVA",  corte: 8.846,  ponderaciones: {} },
+  { id: 113, nombre: "Maestro Educación Primaria",               universidad: "USAL", corte: 9.196,  ponderaciones: {} },
+  { id: 219, nombre: "Maestro Educación Primaria",               universidad: "UBU",  corte: 7.430,  ponderaciones: {} },
+  { id: 221, nombre: "Maestro Educación Primaria",               universidad: "ULE",  corte: 9.088,  ponderaciones: {} },
+  { id: 114, nombre: "Pedagogía",                                universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
+  { id: 216, nombre: "Pedagogía",                                universidad: "USAL", corte: 7.463,  ponderaciones: {} },
+  { id: 115, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "UVA",  corte: 10.253, ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
+  { id: 222, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "USAL", corte: 7.500,  ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
+  { id: 116, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "ULE",  corte: 10.520, ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
+
+  // ── Bellas Artes y Comunicación ──
+  { id: 120, nombre: "Bellas Artes",                             universidad: "USAL", corte: 7.200,  ponderaciones: { "Fundamentos del Arte II": 0.2, "Diseño": 0.2, "Historia del Arte": 0.1 } },
+  { id: 121, nombre: "Comunicación Audiovisual",                 universidad: "UVA",  corte: 7.400,  ponderaciones: { "Historia del Arte": 0.1, "Literatura Castellana": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 206, nombre: "Comunicación y Creación Audiovisual",      universidad: "USAL", corte: 9.025,  ponderaciones: { "Historia del Arte": 0.1, "Literatura Castellana": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 122, nombre: "Periodismo",                               universidad: "USAL", corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 205, nombre: "Periodismo",                               universidad: "UVA",  corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 123, nombre: "Publicidad y Relaciones Públicas",         universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.1, "Economía de la Empresa": 0.1 } },
+];
+
+// ─── LÓGICA ───────────────────────────────────────────────────────────────────
+
+function mejoresEsp(ponderaciones, notasEsp) {
+  return Object.entries(ponderaciones)
+    .map(([asig, pond]) => ({ asig, pond, nota: notasEsp[asig] ?? NaN }))
+    .filter(x => !isNaN(x.nota) && x.nota > 0)
+    .sort((a, b) => (b.pond * b.nota) - (a.pond * a.nota))
+    .slice(0, 2);
+}
+
+function calcularNota(bach, ebau, ponderaciones, notasEsp) {
+  if (isNaN(bach) || isNaN(ebau)) return { nota: null, seleccionadas: [] };
+  const sel = ponderaciones ? mejoresEsp(ponderaciones, notasEsp) : [];
+  let nota = 0.6 * bach + 0.4 * ebau;
+  sel.forEach(s => { nota += s.pond * s.nota; });
+  return { nota: Math.min(14, nota), seleccionadas: sel };
+}
+
+// ─── UI ───────────────────────────────────────────────────────────────────────
+
+const selUniv = document.getElementById('sel-universidad');
+const selGrado = document.getElementById('sel-grado');
+const nBach = document.getElementById('n-bach');
+const nEbau = document.getElementById('n-ebau');
+
+let notasEsp = {};
+
+function poblarGrados() {
+  const univ = selUniv.value;
+  selGrado.innerHTML = '<option value="">— Selecciona un grado —</option>';
+  const filtrados = univ ? GRADOS.filter(g => g.universidad === univ) : GRADOS;
+  [...filtrados].sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g.id;
+    opt.textContent = univ ? g.nombre : `${g.nombre} (${g.universidad})`;
+    selGrado.appendChild(opt);
+  });
+  poblarEspGrid();
+  actualizar();
+}
+
+function poblarEspGrid() {
+  const grado = getGradoSeleccionado();
+  const section = document.getElementById('esp-section');
+  const grid = document.getElementById('esp-grid');
+  grid.innerHTML = '';
+  notasEsp = {};
+
+  if (!grado || Object.keys(grado.ponderaciones).length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+
+  Object.entries(grado.ponderaciones)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([asig, pond]) => {
+      const item = document.createElement('div');
+      item.className = 'esp-item';
+      item.dataset.asig = asig;
+
+      const badgeCls = pond === 0.2 ? 'p02' : 'p01';
+      item.innerHTML = `
+        <div class="esp-item-top">
+          <span class="esp-item-name">${asig}</span>
+          <span class="esp-pond-badge ${badgeCls}">×${pond}</span>
+        </div>
+        <input type="number" min="0" max="10" step="0.001" placeholder="Tu nota">
+        <div class="esp-contrib"></div>`;
+
+      item.querySelector('input').addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        notasEsp[asig] = isNaN(v) ? NaN : v;
+        actualizar();
+      });
+
+      grid.appendChild(item);
+    });
+}
+
+function getGradoSeleccionado() {
+  const id = parseInt(selGrado.value);
+  return GRADOS.find(g => g.id === id) || null;
+}
+
+function val(input) {
+  const v = parseFloat(input.value);
+  return isNaN(v) ? NaN : v;
+}
+
+function fmt(n, dec = 3) {
+  if (isNaN(n) || n === null) return '—';
+  return n.toFixed(dec);
+}
+
+function actualizarEspGrid(seleccionadas) {
+  document.querySelectorAll('.esp-item').forEach(item => {
+    const asig = item.dataset.asig;
+    const sel = seleccionadas.find(s => s.asig === asig);
+    const contrib = item.querySelector('.esp-contrib');
+    if (sel) {
+      item.classList.add('selected');
+      contrib.textContent = `+${fmt(sel.pond * sel.nota)} pts`;
+    } else {
+      item.classList.remove('selected');
+      contrib.textContent = '';
+    }
+  });
+
+  const info = document.getElementById('esp-auto-info');
+  if (seleccionadas.length > 0) {
+    info.style.display = 'block';
+    info.textContent = `Usando automáticamente: ${seleccionadas.map(s => `${s.asig} (×${s.pond})`).join(' y ')}`;
+  } else {
+    info.style.display = 'none';
+  }
+}
+
+function actualizar() {
+  const bach = val(nBach);
+  const ebau = val(nEbau);
+  const grado = getGradoSeleccionado();
+
+  const hayAlgo = !isNaN(bach) || !isNaN(ebau);
+  const resultCard = document.getElementById('resultado-card');
+  const simCard = document.getElementById('sim-card');
+  const univCard = document.getElementById('univ-card');
+
+  if (!hayAlgo) {
+    resultCard.style.display = 'none';
+    simCard.style.display = 'none';
+    univCard.style.display = 'none';
+    actualizarEspGrid([]);
+    return;
+  }
+
+  const pond = grado ? grado.ponderaciones : null;
+  const { nota, seleccionadas } = calcularNota(bach, ebau, pond, notasEsp);
+
+  actualizarEspGrid(seleccionadas);
+
+  resultCard.style.display = 'block';
+  document.getElementById('res-nota').textContent = nota !== null ? fmt(nota) : '—';
+
+  let breakdown = [];
+  if (!isNaN(bach)) breakdown.push(`0.6 × ${fmt(bach)} = ${fmt(0.6*bach)}`);
+  if (!isNaN(ebau)) breakdown.push(`0.4 × ${fmt(ebau)} = ${fmt(0.4*ebau)}`);
+  seleccionadas.forEach(s => breakdown.push(`${s.pond} × ${fmt(s.nota)} (${s.asig}) = ${fmt(s.pond*s.nota)}`));
+  document.getElementById('res-breakdown').textContent = breakdown.join(' + ');
+
+  const corteRow = document.getElementById('res-corte-row');
+  if (grado && nota !== null) {
+    const diff = nota - grado.corte;
+    let badge, texto;
+    if (diff >= 0)       { badge = 'accede';    texto = `Accedes a ${grado.nombre} (${grado.universidad}) — corte: ${grado.corte}`; }
+    else if (diff > -0.5){ badge = 'cerca';     texto = `Muy cerca — te faltan ${fmt(Math.abs(diff))} puntos (corte: ${grado.corte})`; }
+    else                 { badge = 'no-accede'; texto = `No llegas — te faltan ${fmt(Math.abs(diff))} puntos (corte: ${grado.corte})`; }
+    corteRow.innerHTML = `<span class="badge ${badge}">${texto}</span>`;
+  } else {
+    corteRow.innerHTML = '';
+  }
+
+  if (grado) {
+    const mismoGrado = GRADOS.filter(g => g.nombre === grado.nombre);
+    const univNombres = { UVA: 'Univ. de Valladolid', USAL: 'Univ. de Salamanca', UBU: 'Univ. de Burgos', ULE: 'Univ. de León' };
+    if (mismoGrado.length > 1) {
+      univCard.style.display = 'block';
+      const tbody = document.getElementById('univ-tbody');
+      tbody.innerHTML = '';
+      mismoGrado.sort((a, b) => a.corte - b.corte).forEach(g => {
+        const { nota: notaG, seleccionadas: selG } = calcularNota(bach, ebau, g.ponderaciones, notasEsp);
+        const diff = notaG !== null ? notaG - g.corte : null;
+        let rowCls = '', badgeHtml = '', diffHtml = '';
+        if (diff !== null) {
+          if (diff >= 0)       { rowCls = 'row-accede'; badgeHtml = '<span class="badge accede">Accedes</span>'; }
+          else if (diff > -0.5){ rowCls = 'row-cerca';  badgeHtml = '<span class="badge cerca">Muy cerca</span>'; }
+          else                 { rowCls = 'row-no';     badgeHtml = '<span class="badge no-accede">No accedes</span>'; }
+          const sign = diff >= 0 ? '+' : '';
+          const cls  = diff >= 0 ? 'pos' : diff > -0.5 ? 'ntr' : 'neg';
+          diffHtml = `<span class="diff-col ${cls}">${sign}${fmt(diff)}</span>`;
+        }
+        if (g.id === grado.id) rowCls += ' row-sel';
+        const tr = document.createElement('tr');
+        tr.className = rowCls;
+        const notaStr = notaG !== null ? fmt(notaG) : '—';
+        const espUsada = selG.length ? selG.map(s => `${s.asig} ×${s.pond}`).join(', ') : '—';
+        tr.innerHTML = `
+          <td>${univNombres[g.universidad] || g.universidad}${g.id === grado.id ? ' ★' : ''}</td>
+          <td><span class="corte-num">${g.corte.toFixed(3)}</span></td>
+          <td>${notaStr}</td>
+          <td>${diffHtml}</td>
+          <td style="font-size:0.75rem;color:var(--muted)">${espUsada}</td>
+          <td>${badgeHtml}</td>`;
+        tbody.appendChild(tr);
+      });
+    } else {
+      univCard.style.display = 'none';
+    }
+  } else {
+    univCard.style.display = 'none';
+  }
+
+  if (!grado) { simCard.style.display = 'none'; return; }
+
+  const objetivo = grado.corte;
+  const simGrid = document.getElementById('sim-resultados');
+  simGrid.innerHTML = '';
+
+  const allSubj = Object.entries(grado.ponderaciones).sort((a, b) => b[1] - a[1]);
+  const bachBlank = isNaN(bach);
+  const ebauBlank = isNaN(ebau);
+  const subjBlanks = allSubj.filter(([a]) => isNaN(notasEsp[a]) || notasEsp[a] <= 0);
+
+  // Necesitamos al menos Bach o EBAU para calcular algo útil
+  const anyInput = !bachBlank || !ebauBlank || subjBlanks.length < allSubj.length;
+  if (!anyInput) { simCard.style.display = 'none'; return; }
+  simCard.style.display = 'block';
+
+  const base = (!bachBlank ? 0.6 * bach : 0) + (!ebauBlank ? 0.4 * ebau : 0);
+
+  // Para EBAU/Bach en blanco: mejor contribución real de específicas (top-2 con nota)
+  const espFilledSorted = allSubj
+    .map(([a, p]) => { const n = notasEsp[a]; return { asig: a, pond: p, contrib: (!isNaN(n) && n > 0) ? p * n : 0 }; })
+    .sort((x, y) => y.contrib - x.contrib);
+  const espContribSim = espFilledSorted.slice(0, 2).reduce((s, x) => s + x.contrib, 0);
+  const espLabels = espFilledSorted.slice(0, 2).filter(x => x.contrib > 0).map(x => x.asig);
+
+  // EBAU en blanco: fija bach + mejores específicas disponibles
+  if (ebauBlank && !bachBlank) {
+    const needed = (objetivo - 0.6 * bach - espContribSim) / 0.4;
+    const ctx = espLabels.length
+      ? `Con Bach=${fmt(bach)} y específicas: ${espLabels.join(' + ')}`
+      : `Con Bach=${fmt(bach)} (sin específicas introducidas)`;
+    simGrid.appendChild(makeSimCard('¿Qué nota necesito en la EBAU?', needed, null, ctx));
+  }
+
+  // Bachillerato en blanco: fija ebau + mejores específicas disponibles
+  if (bachBlank && !ebauBlank) {
+    const needed = (objetivo - 0.4 * ebau - espContribSim) / 0.6;
+    const ctx = espLabels.length
+      ? `Con EBAU=${fmt(ebau)} y específicas: ${espLabels.join(' + ')}`
+      : `Con EBAU=${fmt(ebau)} (sin específicas introducidas)`;
+    simGrid.appendChild(makeSimCard('¿Qué nota necesito en Bachillerato?', needed, null, ctx));
+  }
+
+  // Asignatura específica en blanco (solo si Bach y EBAU están rellenos)
+  if (!bachBlank && !ebauBlank) {
+    subjBlanks.forEach(([asig, pond]) => {
+      // Apoyo: mejor contribución de otra asignatura con nota real; si no hay, usa la mejor ponderación × 10
+      const othersWithNota = allSubj
+        .filter(([a]) => a !== asig)
+        .map(([a, p]) => { const n = notasEsp[a]; return { asig: a, pond: p, contrib: (!isNaN(n) && n > 0) ? p * n : 0, hasNota: (!isNaN(n) && n > 0) }; })
+        .sort((x, y) => {
+          // Prioriza los que tienen nota real; entre iguales, por contribución
+          if (x.hasNota !== y.hasNota) return x.hasNota ? -1 : 1;
+          return y.contrib - x.contrib;
+        });
+
+      const bestOtherItem = othersWithNota[0];
+      const bestOtherContrib = bestOtherItem
+        ? (bestOtherItem.hasNota ? bestOtherItem.contrib : bestOtherItem.pond * 10)
+        : 0;
+      const assumed = bestOtherItem && !bestOtherItem.hasNota;
+
+      const needed = (objetivo - base - bestOtherContrib) / pond;
+
+      // No mostrar tarjetas imposibles — no aportan información útil
+      if (needed > 10) return;
+
+      const ctx = bestOtherItem
+        ? (assumed
+            ? `Con Bach=${fmt(bach)}, EBAU=${fmt(ebau)} y ${bestOtherItem.asig} a 10 (máx posible)`
+            : `Con Bach=${fmt(bach)}, EBAU=${fmt(ebau)} y ${bestOtherItem.asig}=${fmt(notasEsp[bestOtherItem.asig])}`)
+        : `Con Bach=${fmt(bach)} y EBAU=${fmt(ebau)}`;
+
+      simGrid.appendChild(makeSimCard(`¿Qué nota necesito en ${asig}?`, needed, null, ctx));
+    });
+  }
+
+  if (simGrid.children.length === 0) simCard.style.display = 'none';
+}
+
+function makeSimCard(label, needed, actual, context) {
+  const div = document.createElement('div');
+  div.className = 'sim-card';
+  let cls = '', nota = '—';
+  if (!isNaN(needed) && needed !== null) {
+    if (needed > 10)     { nota = 'Imposible';    cls = 'imposible'; }
+    else if (needed < 0) { nota = 'Ya la tienes'; cls = 'ok'; }
+    else                 { nota = fmt(needed); cls = needed <= 7 ? 'ok' : needed <= 9 ? 'warn' : 'imposible'; }
+  }
+  let statusLine = '';
+  if (actual !== null && !isNaN(actual) && !isNaN(needed) && needed <= 10) {
+    const diff = actual - needed;
+    statusLine = diff >= 0
+      ? `<div class="sim-sub ok-text">✓ Tu nota (${fmt(actual)}) es suficiente</div>`
+      : `<div class="sim-sub warn-text">✗ Te faltan ${fmt(Math.abs(diff))} puntos (tienes ${fmt(actual)})</div>`;
+  }
+  div.innerHTML = `
+    ${context ? `<div class="sim-context">${context}</div>` : ''}
+    <div class="sim-label">${label}</div>
+    <div class="sim-nota ${cls}">${nota}</div>
+    ${statusLine}`;
+  return div;
+}
+
+const TEMAS_PAU = {
+  "Biología": [
+    { t: "Genética molecular: ADN, replicación, transcripción y traducción", f: "alta" },
+    { t: "Genética mendeliana: leyes de Mendel, herencia ligada al sexo, problemas", f: "alta" },
+    { t: "Biotecnología: ingeniería genética, PCR, CRISPR, organismos transgénicos", f: "alta" },
+    { t: "Inmunología: respuesta inmunitaria, anticuerpos, vacunas y sueros", f: "media" },
+    { t: "Metabolismo: fotosíntesis (fases luminosa y oscura) y respiración celular", f: "media" },
+    { t: "Microbiología: bacterias y virus, ciclos lítico y lisogénico", f: "media" },
+  ],
+  "Química": [
+    { t: "Equilibrio químico: constante Kc/Kp, principio de Le Chatelier, Ka/Kb", f: "alta" },
+    { t: "Electroquímica: pilas galvánicas, electrólisis, potenciales de reducción", f: "alta" },
+    { t: "Cinética química: velocidad de reacción, factores, energía de activación", f: "alta" },
+    { t: "Termoquímica: entalpía, ley de Hess, energías de enlace", f: "media" },
+    { t: "Química orgánica: grupos funcionales, nomenclatura, reacciones de adición y sustitución", f: "media" },
+    { t: "Ácido-base: pH, hidrólisis, soluciones tampón, volumetría", f: "media" },
+  ],
+  "Física": [
+    { t: "Gravitación: ley de Newton, campo gravitatorio, energía potencial, satélites", f: "alta" },
+    { t: "Electromagnetismo: ley de Coulomb, campo y potencial eléctrico, condensadores", f: "alta" },
+    { t: "Campo magnético: fuerza sobre cargas y conductores, inducción electromagnética", f: "alta" },
+    { t: "Movimiento ondulatorio: ecuación de onda, interferencia, efecto Doppler", f: "media" },
+    { t: "Física moderna: efecto fotoeléctrico, física nuclear, radiactividad", f: "media" },
+    { t: "MAS: posición, velocidad, aceleración, energía en el movimiento armónico", f: "media" },
+  ],
+  "Matemáticas II": [
+    { t: "Álgebra lineal: matrices, determinantes, sistemas de ecuaciones (Rouché-Fröbenius)", f: "alta" },
+    { t: "Geometría analítica: posición relativa de planos/rectas, distancias, ángulos", f: "alta" },
+    { t: "Análisis: derivadas, estudio de funciones, máximos y mínimos", f: "alta" },
+    { t: "Integrales: cálculo de áreas, integrales definidas e indefinidas", f: "media" },
+    { t: "Geometría métrica: puntos simétricos, volúmenes, verdaderas magnitudes", f: "media" },
+  ],
+  "Matemáticas CCSS II": [
+    { t: "Probabilidad: probabilidad condicionada, regla de Bayes, independencia", f: "alta" },
+    { t: "Distribuciones: binomial y normal, tipificación, cálculo de probabilidades", f: "alta" },
+    { t: "Programación lineal: región factible, vértices, optimización", f: "alta" },
+    { t: "Análisis: derivadas, estudio de funciones, crecimiento, extremos", f: "media" },
+    { t: "Álgebra: matrices, sistemas de ecuaciones, método de Gauss", f: "media" },
+  ],
+  "Geografía": [
+    { t: "Climas de España: tipos climáticos, factores, dominios y regiones", f: "alta" },
+    { t: "Relieve y geomorfología: unidades morfoestructurales, costas, montañas", f: "alta" },
+    { t: "Hidrografía: cuencas, vertientes, régimen fluvial, recursos hídricos", f: "media" },
+    { t: "Medio ambiente y paisajes: vegetación, cambio climático, riesgos naturales", f: "media" },
+    { t: "Castilla y León: clima, vegetación, relieve, problemas demográficos", f: "media" },
+  ],
+  "Historia del Arte": [
+    { t: "Renacimiento: características, Quattrocento y Cinquecento, El Escorial", f: "alta" },
+    { t: "Barroco: arquitectura, Velázquez, escultura religiosa española", f: "alta" },
+    { t: "Arte contemporáneo: Impresionismo, Cubismo (Picasso), Surrealismo", f: "alta" },
+    { t: "Neoclasicismo y Romanticismo: Goya, características y obras clave", f: "media" },
+    { t: "Análisis y comentario de obras de arte (metodología)", f: "media" },
+  ],
+  "Economía de la Empresa": [
+    { t: "Análisis financiero: balance, cuenta de resultados, ratios de liquidez y endeudamiento", f: "alta" },
+    { t: "Punto de equilibrio (umbral de rentabilidad) y análisis de costes", f: "alta" },
+    { t: "Dirección y recursos humanos: motivación, organización, liderazgo", f: "media" },
+    { t: "Marketing: producto, precio, distribución y comunicación (4P)", f: "media" },
+    { t: "Tipos de empresa, forma jurídica y financiación empresarial", f: "media" },
+  ],
+  "Dibujo Técnico II": [
+    { t: "Sistema diédrico: representación de puntos, rectas y planos, abatimientos", f: "alta" },
+    { t: "Intersecciones y secciones planas de sólidos", f: "alta" },
+    { t: "Perspectiva isométrica y caballera de sólidos", f: "media" },
+    { t: "Geometría plana: construcciones, polígonos, tangencias", f: "media" },
+    { t: "Verdaderas magnitudes y desarrollos de superficies", f: "media" },
+  ],
+  "Geología": [
+    { t: "Tectónica de placas: tipos de bordes, geodinámica interna, sismicidad", f: "alta" },
+    { t: "Rocas ígneas, sedimentarias y metamórficas: formación y clasificación", f: "alta" },
+    { t: "Minerales: propiedades físicas, clasificación, silicatos", f: "media" },
+    { t: "Tiempo geológico: datación relativa y absoluta, fósiles guía", f: "media" },
+    { t: "Riesgos geológicos: volcanes, terremotos, deslizamientos", f: "media" },
+  ],
+  "Latín II": [
+    { t: "Traducción de textos: César (Guerras Gálicas) y Cicerón (discursos)", f: "alta" },
+    { t: "Morfosintaxis: casos latinos, oraciones subordinadas, participios y gerundios", f: "alta" },
+    { t: "Literatura latina: épica (Virgilio), lírica (Horacio, Ovidio), historiografía", f: "media" },
+    { t: "Cultura y civilización romana: instituciones, religión, vida cotidiana", f: "media" },
+  ],
+  "Griego II": [
+    { t: "Traducción de textos: Jenofonte (Anábasis), mitología, prosa ática", f: "alta" },
+    { t: "Morfología y sintaxis: declinaciones, conjugaciones, oraciones de participio", f: "alta" },
+    { t: "Literatura griega: épica homérica, tragedia, historiografía", f: "media" },
+    { t: "Mitología y cultura griega: dioses, héroes, polis, olimpiadas", f: "media" },
+  ],
+  "Literatura Castellana": [
+    { t: "Generación del 98: Unamuno, Machado, Azorín, la crisis de fin de siglo", f: "alta" },
+    { t: "Generación del 27: Lorca, Alberti, Cernuda, Salinas — poesía contemporánea", f: "alta" },
+    { t: "Modernismo: Rubén Darío, características, temas y estilo", f: "media" },
+    { t: "Novela del siglo XX: Cela (La colmena), desolación de posguerra", f: "media" },
+    { t: "Comentario de texto literario: estructura, recursos y contexto", f: "media" },
+  ],
+  "Tecnología e Ingeniería II": [
+    { t: "Electrónica digital: puertas lógicas, circuitos combinacionales, biestables", f: "alta" },
+    { t: "Sistemas automáticos y de control: lazo abierto/cerrado, reguladores PID", f: "alta" },
+    { t: "Circuitos eléctricos: corriente alterna, impedancia, resonancia", f: "media" },
+    { t: "Neumática e hidráulica: actuadores, válvulas, circuitos neumáticos", f: "media" },
+    { t: "Resistencia de materiales: tracción, flexión, pandeo, coeficiente de seguridad", f: "media" },
+  ],
+  "Fundamentos del Arte II": [
+    { t: "Arte contemporáneo: vanguardias (Cubismo, Surrealismo, Abstracción)", f: "alta" },
+    { t: "Análisis formal de obras: composición, color, técnica, iconografía", f: "alta" },
+    { t: "Arte del siglo XX en España: Picasso, Miró, Dalí y contexto histórico", f: "media" },
+    { t: "Arte del siglo XIX: Neoclasicismo, Romanticismo, Realismo, Impresionismo", f: "media" },
+  ],
+  "Diseño": [
+    { t: "Fundamentos del diseño: principios compositivos, color, tipografía", f: "alta" },
+    { t: "Diseño gráfico y comunicación visual: cartel, logotipo, identidad corporativa", f: "alta" },
+    { t: "Historia del diseño: Bauhaus, diseño industrial, diseño digital contemporáneo", f: "media" },
+    { t: "Metodología proyectual: fases del proceso de diseño, bocetos, prototipado", f: "media" },
+  ],
+};
+
+function actualizarTemas() {
+  const temasCard = document.getElementById('temas-card');
+  const temasGrid = document.getElementById('temas-grid');
+  const grado = getGradoSeleccionado();
+  if (!grado || !grado.ponderaciones || Object.keys(grado.ponderaciones).length === 0) {
+    temasCard.style.display = 'none';
+    return;
+  }
+  const asigs = Object.entries(grado.ponderaciones).sort((a, b) => b[1] - a[1]);
+  const hayTemas = asigs.some(([a]) => TEMAS_PAU[a]);
+  if (!hayTemas) { temasCard.style.display = 'none'; return; }
+
+  temasCard.style.display = 'block';
+  temasGrid.innerHTML = '';
+
+  asigs.forEach(([asig, pond], idx) => {
+    const temas = TEMAS_PAU[asig];
+    if (!temas) return;
+    const div = document.createElement('div');
+    div.className = 'temas-asig' + (idx === 0 ? ' open' : '');
+    div.innerHTML = `
+      <div class="temas-asig-header">
+        <span class="temas-asig-name">${asig}</span>
+        <span class="temas-pond-badge">×${pond}</span>
+        <span class="temas-chevron">▼</span>
+      </div>
+      <div class="temas-body">
+        <p class="temas-freq-legend"><span style="background:#fce7f3;color:#be185d;padding:1px 5px;border-radius:3px;font-size:0.7rem;font-weight:700">Alta</span> — aparece casi todos los años &nbsp; <span style="background:var(--brand-light);color:var(--brand);padding:1px 5px;border-radius:3px;font-size:0.7rem;font-weight:700">Media</span> — aparece frecuentemente</p>
+        <ul class="temas-list">${temas.map(({ t, f }) =>
+          `<li><span class="temas-freq ${f}">${f === 'alta' ? 'Alta' : 'Media'}</span><span>${t}</span></li>`
+        ).join('')}</ul>
+      </div>`;
+    div.querySelector('.temas-asig-header').addEventListener('click', () => div.classList.toggle('open'));
+    temasGrid.appendChild(div);
+  });
+}
+
+selUniv.addEventListener('change', poblarGrados);
+selGrado.addEventListener('change', () => { poblarEspGrid(); actualizar(); actualizarTemas(); });
+[nBach, nEbau].forEach(el => el.addEventListener('input', actualizar));
+
+poblarGrados();
+</script>
+</body>
+</html>
