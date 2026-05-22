@@ -176,7 +176,11 @@
 <div class="container">
 
   <div class="aviso-beta">
-    ⚠️ Aplicación en pruebas. El autor no se responsabiliza de la exactitud de los datos. Verifica siempre la información en las webs oficiales de cada universidad.
+    ⚠️ <strong>Aplicación en pruebas.</strong> Las notas de corte mostradas pueden estar desactualizadas. El autor no se responsabiliza de la exactitud de los datos. Consulta siempre las webs oficiales:
+    <a href="https://www.uva.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UVA</a> ·
+    <a href="https://www.usal.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">USAL</a> ·
+    <a href="https://www.ubu.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UBU</a> ·
+    <a href="https://www.unileon.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">ULE</a>
   </div>
 
   <div class="card">
@@ -269,15 +273,30 @@
 
 </div>
 
+<div class="container" style="padding-top:0;">
+  <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+    <span style="font-size:1.3rem;">📋</span>
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:0.85rem;font-weight:600;color:var(--text);">Notas de corte oficiales 2025/2026</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Disponibles del 9 de julio al 22 de octubre en el portal de preinscripción de las universidades de CyL</div>
+    </div>
+    <a href="https://precyl.usal.es/notas-corte/" target="_blank" rel="noopener"
+       style="display:inline-block;padding:9px 18px;background:var(--brand);color:white;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .15s;"
+       onmouseover="this.style.background='#0e3a6e'" onmouseout="this.style.background='var(--brand)'">
+      Ver notas de corte →
+    </a>
+  </div>
+</div>
+
 <script>
-// Notas de corte 2025-2026. Fuente: notasdecorte.es
+// Notas de corte 2025-2026. Fuente: PDFs oficiales UVA, USAL, UBU, ULE (octubre 2025)
 // Corte 5.000 = sin lista de espera ese año (plazas sin cubrir).
 const GRADOS = [
   // ── Ciencias de la Salud ──
-  { id: 1,   nombre: "Medicina",                                 universidad: "USAL", corte: 12.787, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 1,   nombre: "Medicina",                                 universidad: "USAL", corte: 12.808, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
   { id: 2,   nombre: "Medicina",                                 universidad: "UVA",  corte: 12.720, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
-  { id: 3,   nombre: "Odontología",                              universidad: "USAL", corte: 12.836, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
-  { id: 4,   nombre: "Farmacia",                                 universidad: "USAL", corte: 10.852, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 3,   nombre: "Odontología",                              universidad: "USAL", corte: 12.876, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
+  { id: 4,   nombre: "Farmacia",                                 universidad: "USAL", corte: 11.102, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
   { id: 5,   nombre: "Veterinaria",                              universidad: "USAL", corte: 9.80,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 6,   nombre: "Veterinaria",                              universidad: "ULE",  corte: 11.420, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 7,   nombre: "Enfermería",                               universidad: "UVA",  corte: 11.392, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Física": 0.1 } },
@@ -285,16 +304,16 @@ const GRADOS = [
   { id: 9,   nombre: "Enfermería",                               universidad: "UBU",  corte: 11.230, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
   { id: 10,  nombre: "Enfermería",                               universidad: "ULE",  corte: 11.450, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
   { id: 11,  nombre: "Fisioterapia",                             universidad: "UVA",  corte: 10.303, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
-  { id: 12,  nombre: "Fisioterapia",                             universidad: "USAL", corte: 11.591, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
+  { id: 12,  nombre: "Fisioterapia",                             universidad: "USAL", corte: 11.828, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
   { id: 13,  nombre: "Fisioterapia",                             universidad: "ULE",  corte: 10.744, ponderaciones: { "Biología": 0.2, "Física": 0.1 } },
   { id: 14,  nombre: "Psicología",                               universidad: "UVA",  corte: 8.20,   ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2, "Matemáticas II": 0.1 } },
-  { id: 15,  nombre: "Psicología",                               universidad: "USAL", corte: 10.674, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
-  { id: 217, nombre: "Psicología",                               universidad: "UBU",  corte: 9.964,  ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
+  { id: 15,  nombre: "Psicología",                               universidad: "USAL", corte: 10.863, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
+  { id: 217, nombre: "Psicología",                               universidad: "UBU",  corte: 7.170,  ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.2 } },
   { id: 16,  nombre: "Nutrición y Dietética",                    universidad: "USAL", corte: 9.00,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 240, nombre: "Nutrición y Dietética",                    universidad: "UVA",  corte: 9.860,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 241, nombre: "Nutrición y Dietética",                    universidad: "ULE",  corte: 7.010,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 17,  nombre: "Terapia Ocupacional",                      universidad: "UVA",  corte: 5.000,  ponderaciones: { "Biología": 0.2 } },
-  { id: 239, nombre: "Terapia Ocupacional",                      universidad: "USAL", corte: 7.811,  ponderaciones: { "Biología": 0.2 } },
+  { id: 239, nombre: "Terapia Ocupacional",                      universidad: "USAL", corte: 9.653,  ponderaciones: { "Biología": 0.2 } },
   { id: 242, nombre: "Terapia Ocupacional",                      universidad: "UBU",  corte: 7.000,  ponderaciones: { "Biología": 0.2 } },
   { id: 18,  nombre: "Óptica y Optometría",                      universidad: "UVA",  corte: 8.090,  ponderaciones: { "Física": 0.2, "Matemáticas II": 0.1 } },
   { id: 243, nombre: "Logopedia",                                universidad: "UVA",  corte: 6.780,  ponderaciones: {} },
@@ -311,21 +330,21 @@ const GRADOS = [
   { id: 248, nombre: "Biotecnología",                            universidad: "ULE",  corte: 11.704, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 22,  nombre: "Bioquímica",                               universidad: "USAL", corte: 8.20,   ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 24,  nombre: "Química",                                  universidad: "UVA",  corte: 5.854,  ponderaciones: { "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
-  { id: 25,  nombre: "Química",                                  universidad: "USAL", corte: 5.000,  ponderaciones: { "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 25,  nombre: "Química",                                  universidad: "USAL", corte: 8.103,  ponderaciones: { "Química": 0.2, "Matemáticas II": 0.1 } },
   { id: 26,  nombre: "Física",                                   universidad: "UVA",  corte: 11.265, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
   { id: 32,  nombre: "Física",                                   universidad: "USAL", corte: 11.990, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
   { id: 27,  nombre: "Matemáticas",                              universidad: "UVA",  corte: 11.988, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
-  { id: 28,  nombre: "Matemáticas",                              universidad: "USAL", corte: 12.666, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 28,  nombre: "Matemáticas",                              universidad: "USAL", corte: 12.676, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
   { id: 29,  nombre: "Geología",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Geología": 0.2, "Química": 0.1, "Biología": 0.1 } },
   { id: 33,  nombre: "Geología",                                 universidad: "USAL", corte: 5.000,  ponderaciones: { "Geología": 0.2, "Química": 0.1, "Biología": 0.1 } },
   { id: 30,  nombre: "Ciencia y Tecnología de los Alimentos",    universidad: "USAL", corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 249, nombre: "Ciencia y Tecnología de los Alimentos",    universidad: "ULE",  corte: 5.109,  ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
   { id: 31,  nombre: "Estadística",                              universidad: "UVA",  corte: 9.238,  ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.1 } },
-  { id: 34,  nombre: "Estadística",                              universidad: "USAL", corte: 6.506,  ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 34,  nombre: "Estadística",                              universidad: "USAL", corte: 8.434,  ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.1 } },
 
   // ── Ingenierías ──
   { id: 40,  nombre: "Ingeniería Informática",                   universidad: "UVA",  corte: 8.232,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
-  { id: 41,  nombre: "Ingeniería Informática",                   universidad: "USAL", corte: 8.846,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 41,  nombre: "Ingeniería Informática",                   universidad: "USAL", corte: 9.325,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
   { id: 42,  nombre: "Ingeniería Informática",                   universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
   { id: 43,  nombre: "Ingeniería Informática",                   universidad: "ULE",  corte: 7.766,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
   { id: 44,  nombre: "Ingeniería Industrial",                    universidad: "UVA",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
@@ -348,7 +367,7 @@ const GRADOS = [
   { id: 228, nombre: "Ing. Civil",                               universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
   { id: 251, nombre: "Ing. Aeroespacial",                        universidad: "ULE",  corte: 12.669, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
   { id: 252, nombre: "Ing. de Datos e Inteligencia Artificial",  universidad: "ULE",  corte: 10.786, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
-  { id: 253, nombre: "Matemática Aplicada y Computación",        universidad: "UBU",  corte: 10.066, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 253, nombre: "Matemática Aplicada y Computación",        universidad: "UBU",  corte: 7.483, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
 
   // ── Arquitectura ──
   { id: 60,  nombre: "Fundamentos de Arquitectura",              universidad: "UVA",  corte: 8.949,  ponderaciones: { "Dibujo Técnico II": 0.2, "Matemáticas II": 0.2, "Fundamentos del Arte II": 0.1, "Diseño": 0.1 } },
@@ -371,7 +390,7 @@ const GRADOS = [
   { id: 234, nombre: "Relaciones Laborales",                     universidad: "UBU",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
   { id: 235, nombre: "Relaciones Laborales",                     universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Economía de la Empresa": 0.1 } },
   { id: 81,  nombre: "Trabajo Social",                           universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
-  { id: 210, nombre: "Trabajo Social",                           universidad: "USAL", corte: 5.000,  ponderaciones: {} },
+  { id: 210, nombre: "Trabajo Social",                           universidad: "USAL", corte: 7.564,  ponderaciones: {} },
   { id: 211, nombre: "Trabajo Social",                           universidad: "UBU",  corte: 5.000,  ponderaciones: {} },
   { id: 212, nombre: "Trabajo Social",                           universidad: "ULE",  corte: 5.000,  ponderaciones: {} },
   { id: 82,  nombre: "Marketing",                                universidad: "UVA",  corte: 8.549,  ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
@@ -384,7 +403,7 @@ const GRADOS = [
   { id: 208, nombre: "Turismo",                                  universidad: "UBU",  corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
   { id: 209, nombre: "Turismo",                                  universidad: "ULE",  corte: 5.000,  ponderaciones: { "Geografía": 0.1, "Historia del Arte": 0.1 } },
   { id: 85,  nombre: "Educación Social",                         universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
-  { id: 213, nombre: "Educación Social",                         universidad: "USAL", corte: 5.000,  ponderaciones: {} },
+  { id: 213, nombre: "Educación Social",                         universidad: "USAL", corte: 7.284,  ponderaciones: {} },
   { id: 214, nombre: "Educación Social",                         universidad: "UBU",  corte: 5.000,  ponderaciones: {} },
   { id: 215, nombre: "Educación Social",                         universidad: "ULE",  corte: 7.333,  ponderaciones: {} },
   { id: 86,  nombre: "Relaciones Internacionales",               universidad: "UVA",  corte: 9.248,  ponderaciones: { "Historia del Arte": 0.1, "Latín II": 0.1 } },
@@ -392,9 +411,9 @@ const GRADOS = [
   { id: 87,  nombre: "Ciencias Políticas",                       universidad: "USAL", corte: 5.000,  ponderaciones: { "Historia del Arte": 0.1, "Geografía": 0.1 } },
   { id: 88,  nombre: "Sociología",                               universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1 } },
   { id: 89,  nombre: "Criminología",                             universidad: "UBU",  corte: 7.900,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
-  { id: 229, nombre: "Criminología",                             universidad: "USAL", corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
+  { id: 229, nombre: "Criminología",                             universidad: "USAL", corte: 8.999,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
   { id: 230, nombre: "Criminología",                             universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1 } },
-  { id: 257, nombre: "Estudios Globales",                        universidad: "USAL", corte: 9.607,  ponderaciones: { "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 257, nombre: "Estudios Globales",                        universidad: "USAL", corte: 9.879,  ponderaciones: { "Historia del Arte": 0.1, "Geografía": 0.1 } },
 
   // ── Humanidades ──
   { id: 100, nombre: "Historia",                                 universidad: "UVA",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Griego II": 0.1, "Geografía": 0.1 } },
@@ -413,21 +432,21 @@ const GRADOS = [
 
   // ── Educación ──
   { id: 110, nombre: "Maestro Educación Infantil",               universidad: "UVA",  corte: 7.190,  ponderaciones: {} },
-  { id: 111, nombre: "Maestro Educación Infantil",               universidad: "USAL", corte: 9.305,  ponderaciones: {} },
+  { id: 111, nombre: "Maestro Educación Infantil",               universidad: "USAL", corte: 9.334,  ponderaciones: {} },
   { id: 218, nombre: "Maestro Educación Infantil",               universidad: "UBU",  corte: 6.770,  ponderaciones: {} },
   { id: 220, nombre: "Maestro Educación Infantil",               universidad: "ULE",  corte: 8.729,  ponderaciones: {} },
   { id: 112, nombre: "Maestro Educación Primaria",               universidad: "UVA",  corte: 8.846,  ponderaciones: {} },
-  { id: 113, nombre: "Maestro Educación Primaria",               universidad: "USAL", corte: 9.196,  ponderaciones: {} },
+  { id: 113, nombre: "Maestro Educación Primaria",               universidad: "USAL", corte: 10.328,  ponderaciones: {} },
   { id: 219, nombre: "Maestro Educación Primaria",               universidad: "UBU",  corte: 7.430,  ponderaciones: {} },
   { id: 221, nombre: "Maestro Educación Primaria",               universidad: "ULE",  corte: 9.088,  ponderaciones: {} },
   { id: 114, nombre: "Pedagogía",                                universidad: "UVA",  corte: 5.000,  ponderaciones: {} },
-  { id: 216, nombre: "Pedagogía",                                universidad: "USAL", corte: 7.463,  ponderaciones: {} },
+  { id: 216, nombre: "Pedagogía",                                universidad: "USAL", corte: 8.375,  ponderaciones: {} },
   { id: 115, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "UVA",  corte: 10.253, ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
   { id: 222, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "USAL", corte: 7.500,  ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
   { id: 116, nombre: "Ciencias de la Actividad Física y del Deporte", universidad: "ULE",  corte: 10.520, ponderaciones: { "Biología": 0.1, "Física": 0.1 } },
 
   // ── Bellas Artes y Comunicación ──
-  { id: 120, nombre: "Bellas Artes",                             universidad: "USAL", corte: 7.200,  ponderaciones: { "Fundamentos del Arte II": 0.2, "Diseño": 0.2, "Historia del Arte": 0.1 } },
+  { id: 120, nombre: "Bellas Artes",                             universidad: "USAL", corte: 5.000,  ponderaciones: { "Fundamentos del Arte II": 0.2, "Diseño": 0.2, "Historia del Arte": 0.1 } },
   { id: 121, nombre: "Comunicación Audiovisual",                 universidad: "UVA",  corte: 7.400,  ponderaciones: { "Historia del Arte": 0.1, "Literatura Castellana": 0.1, "Fundamentos del Arte II": 0.1 } },
   { id: 206, nombre: "Comunicación y Creación Audiovisual",      universidad: "USAL", corte: 9.025,  ponderaciones: { "Historia del Arte": 0.1, "Literatura Castellana": 0.1, "Fundamentos del Arte II": 0.1 } },
   { id: 122, nombre: "Periodismo",                               universidad: "USAL", corte: 5.000,  ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
