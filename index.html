@@ -226,6 +226,12 @@
     <a href="https://www.unileon.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">ULE</a>
   </div>
 
+  <div id="aviso-notas-nuevas" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;padding:13px 16px;font-size:0.82rem;color:#1e3a8a;margin-bottom:20px;line-height:1.65;">
+    🎓 <strong>¡Ya están disponibles las notas de corte de la EBAU 2025-26!</strong>
+    Las notas de la aplicación pueden no estar actualizadas aún. Consulta los resultados oficiales en
+    <a href="https://precyl.usal.es/notas-corte/" target="_blank" rel="noopener" style="color:#1d4ed8;font-weight:600;">precyl.usal.es/notas-corte</a>.
+  </div>
+
   <div class="card">
     <div class="card-head"><div class="step-badge">1</div><h2>Elige tu grado y universidad</h2></div>
     <div class="selector-row">
@@ -959,6 +965,15 @@ selGrado.addEventListener('change', () => { poblarEspGrid(); actualizar(); actua
 [nBach, nEbau].forEach(el => el.addEventListener('input', actualizar));
 
 poblarGrados();
+
+// Mostrar aviso de notas nuevas a partir del 9 de julio de 2026
+(function() {
+  const hoy = new Date();
+  const fechaNotas = new Date('2026-07-09');
+  if (hoy >= fechaNotas) {
+    document.getElementById('aviso-notas-nuevas').style.display = 'block';
+  }
+})();
 </script>
 </body>
 </html>

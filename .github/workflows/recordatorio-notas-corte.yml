@@ -1,0 +1,55 @@
+name: Recordatorio actualización notas de corte
+
+on:
+  schedule:
+    # 9 de julio de 2026 a las 08:00 UTC (10:00 hora España)
+    - cron: '0 8 9 7 *'
+    # 10 de julio de 2026 (reintento) a las 08:00 UTC
+    - cron: '0 8 10 7 *'
+  workflow_dispatch:
+
+jobs:
+  recordatorio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear issue de recordatorio
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const today = new Date().toISOString().slice(0, 10);
+            const titulo = `[Automático] Actualizar notas de corte EBAU 2025-26 — ${today}`;
+
+            // Comprobar si ya existe un issue abierto para no duplicar
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'notas-corte'
+            });
+            if (issues.data.length > 0) {
+              console.log('Ya existe un issue abierto. No se crea otro.');
+              return;
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: titulo,
+              labels: ['notas-corte'],
+              body: `## Recordatorio: actualizar notas de corte
+
+Las notas de corte EBAU 2025-26 deberían estar disponibles hoy en [precyl.usal.es/notas-corte](https://precyl.usal.es/notas-corte/).
+
+### Pasos para actualizar la app:
+1. Descarga los PDFs oficiales de notas de corte de cada universidad:
+   - **UVA**: [uva.es](https://www.uva.es) → Admisión → Notas de corte
+   - **USAL**: [usal.es](https://www.usal.es) → Acceso y admisión
+   - **UBU**: [ubu.es](https://www.ubu.es) → Admisión
+   - **ULE**: [unileon.es](https://www.unileon.es) → Acceso
+2. Actualiza el array \`GRADOS\` en \`index.html\` con las nuevas notas de corte
+3. Actualiza el comentario de fuente: \`// Notas de corte 2026-2027. Fuente: PDFs oficiales...\`
+4. Haz commit y push a GitHub
+5. Cierra este issue
+
+> Generado automáticamente por GitHub Actions.`
+            });
