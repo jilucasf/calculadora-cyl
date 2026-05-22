@@ -6,171 +6,214 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <title>Calculadora Acceso Universidades CyL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --brand: #1a56a0;
-    --brand-light: #e8f0fc;
-    --green: #16a34a;
-    --green-light: #dcfce7;
-    --red: #dc2626;
-    --red-light: #fee2e2;
-    --yellow: #d97706;
-    --yellow-light: #fef3c7;
-    --gray: #f3f4f6;
-    --border: #e5e7eb;
-    --text: #111827;
-    --muted: #6b7280;
+    --brand: #2563eb;
+    --brand-dark: #1d4ed8;
+    --brand-light: #eff6ff;
+    --brand-mid: #bfdbfe;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --green-dark: #059669;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --yellow: #f59e0b;
+    --yellow-light: #fffbeb;
+    --yellow-dark: #d97706;
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-2: #475569;
+    --muted: #94a3b8;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+    --radius: 18px;
+    --radius-sm: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; color: var(--text); background: #f9fafb; }
+  body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--bg); line-height: 1.5; }
 
+  /* Header */
   header {
-    background: linear-gradient(135deg, #1a56a0 0%, #0e3a6e 100%);
-    color: white; padding: 24px 32px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #3b82f6 100%);
+    color: white; padding: 48px 32px 40px; position: relative; overflow: hidden;
   }
-  header h1 { font-size: 1.5rem; font-weight: 700; }
-  header p { font-size: 0.875rem; opacity: 0.8; margin-top: 4px; }
-
-  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
-
-  .card {
-    background: white; border-radius: 12px; border: 1px solid var(--border);
-    padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  header::before {
+    content: ''; position: absolute; top: -60%; right: -5%; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 65%);
+    pointer-events: none;
   }
-  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--brand); }
-
-  .selector-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .selector-row > * { flex: 1; min-width: 180px; }
-  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
-  select, input[type=number] {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: 8px; font-size: 0.95rem; background: white;
-    transition: border-color .15s;
+  header::after {
+    content: ''; position: absolute; bottom: -40%; left: 15%; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+    pointer-events: none;
   }
-  select:focus, input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-light); }
-
-  .notas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .nota-field input { text-align: center; font-size: 1.1rem; font-weight: 600; }
-
-  .resultado-box {
-    text-align: center; padding: 20px;
-    border-radius: 10px; background: var(--brand-light);
-    margin-bottom: 20px;
+  .header-inner { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+  .header-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 5px 14px; font-size: 0.75rem; font-weight: 600;
+    margin-bottom: 16px; backdrop-filter: blur(6px); letter-spacing: 0.02em;
   }
-  .resultado-box .nota-final { font-size: 3rem; font-weight: 800; color: var(--brand); line-height: 1; }
-  .resultado-box .nota-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
-  .resultado-box .nota-corte-row { margin-top: 12px; font-size: 0.95rem; }
+  header h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+  header p { font-size: 0.95rem; opacity: 0.75; margin-top: 10px; font-weight: 400; max-width: 540px; }
 
-  .badge {
-    display: inline-block; padding: 4px 12px; border-radius: 20px;
-    font-weight: 700; font-size: 0.9rem;
-  }
-  .badge.accede { background: var(--green-light); color: var(--green); }
-  .badge.no-accede { background: var(--red-light); color: var(--red); }
-  .badge.cerca { background: var(--yellow-light); color: var(--yellow); }
+  /* Layout */
+  .container { max-width: 860px; margin: 0 auto; padding: 28px 16px; }
 
-  .univ-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  .univ-table th {
-    text-align: left; padding: 8px 12px; font-size: 0.75rem; font-weight: 600;
-    color: var(--muted); text-transform: uppercase; letter-spacing: .05em;
-    border-bottom: 2px solid var(--border);
-  }
-  .univ-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
-  .univ-table tr:last-child td { border-bottom: none; }
-  .univ-table tr.row-accede td { background: var(--green-light); }
-  .univ-table tr.row-cerca td { background: var(--yellow-light); }
-  .univ-table tr.row-no td { background: var(--red-light); }
-  .univ-table tr.row-sel td { font-weight: 700; }
-  .univ-table .corte-num { font-weight: 700; font-size: 1rem; }
-  .univ-table .diff-col { font-size: 0.82rem; }
-  .univ-table .diff-col.pos { color: var(--green); }
-  .univ-table .diff-col.neg { color: var(--red); }
-  .univ-table .diff-col.ntr { color: var(--yellow); }
-
+  /* Aviso */
   .aviso-beta {
-    background: #fef9c3; border: 1px solid #fde047; border-radius: 8px;
-    padding: 10px 14px; font-size: 0.82rem; color: #713f12;
-    margin-bottom: 16px; line-height: 1.5;
+    background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b;
+    border-radius: var(--radius-sm); padding: 13px 16px; font-size: 0.82rem; color: #78350f;
+    margin-bottom: 20px; line-height: 1.65;
   }
+  .aviso-beta strong { font-weight: 700; }
 
-  .sim-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
-  .sim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-  .sim-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-  .sim-card .sim-label { font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-  .sim-card .sim-nota { font-size: 1.6rem; font-weight: 800; }
+  /* Cards */
+  .card {
+    background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
+    padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .step-badge {
+    width: 34px; height: 34px; background: var(--brand); color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.35);
+  }
+  .card h2 { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+
+  /* Selectors */
+  .selector-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .selector-row > * { flex: 1; min-width: 200px; }
+  label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
+  select, input[type=number] {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.95rem; font-family: inherit; background: var(--surface); color: var(--text);
+    transition: border-color .15s, box-shadow .15s; -webkit-appearance: none; appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px;
+  }
+  select:focus, input[type=number]:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+
+  /* Notas grid */
+  .notas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .nota-field input { text-align: center; font-size: 1.15rem; font-weight: 700; }
+
+  /* Resultado */
+  .resultado-box {
+    text-align: center; padding: 32px 20px; border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid var(--brand-mid); margin-bottom: 16px;
+  }
+  .resultado-box .nota-final { font-size: 4.5rem; font-weight: 800; color: var(--brand); line-height: 1; letter-spacing: -0.04em; }
+  .resultado-box .nota-label { font-size: 0.8rem; color: var(--text-2); margin-top: 6px; font-weight: 500; }
+  .resultado-box .nota-corte-row { margin-top: 16px; font-size: 0.95rem; }
+  #res-breakdown { font-size: 0.82rem; color: var(--text-2); background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.88rem; }
+  .badge.accede { background: var(--green-light); color: var(--green-dark); }
+  .badge.no-accede { background: var(--red-light); color: #b91c1c; }
+  .badge.cerca { background: var(--yellow-light); color: var(--yellow-dark); }
+
+  /* Table */
+  .univ-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .univ-table th {
+    text-align: left; padding: 10px 14px; font-size: 0.7rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em;
+    border-bottom: 2px solid var(--border); background: #f8fafc;
+  }
+  .univ-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .univ-table tr:last-child td { border-bottom: none; }
+  .univ-table tr.row-accede td { background: #f0fdf4; }
+  .univ-table tr.row-cerca td { background: var(--yellow-light); }
+  .univ-table tr.row-no td { background: #fff1f2; }
+  .univ-table tr.row-sel td { font-weight: 700; }
+  .univ-table .corte-num { font-weight: 800; font-size: 1rem; }
+  .univ-table .diff-col { font-size: 0.82rem; font-weight: 700; }
+  .univ-table .diff-col.pos { color: var(--green-dark); }
+  .univ-table .diff-col.neg { color: var(--red); }
+  .univ-table .diff-col.ntr { color: var(--yellow-dark); }
+
+  /* Formula */
+  .formula-box {
+    background: #f8fafc; border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; font-size: 0.82rem; color: var(--text-2); margin-top: 18px;
+  }
+  .formula-box code { color: var(--brand); font-weight: 700; font-size: 0.88rem; }
+
+  /* Específicas */
+  .esp-title { font-size: 0.72rem; font-weight: 700; margin-bottom: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+  .esp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .esp-item {
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .esp-item.selected { border-color: var(--brand); background: var(--brand-light); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+  .esp-item-top { display: flex; align-items: center; justify-content: space-between; }
+  .esp-item-name { font-size: 0.82rem; font-weight: 600; }
+  .esp-pond-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: #f1f5f9; color: var(--text-2); }
+  .esp-pond-badge.p02 { background: #fce7f3; color: #9d174d; }
+  .esp-pond-badge.p01 { background: var(--brand-light); color: var(--brand); }
+  .esp-item input { text-align: center; font-size: 1rem; font-weight: 700; padding: 7px; border-radius: 8px; }
+  .esp-item.selected input { border-color: var(--brand); }
+  .esp-contrib { font-size: 0.75rem; color: var(--brand); font-weight: 700; min-height: 1em; }
+  .esp-auto-info { margin-top: 12px; font-size: 0.82rem; color: var(--text-2); background: #f8fafc; border-radius: 8px; padding: 9px 13px; border: 1px solid var(--border); }
+
+  /* Simulador */
+  .sim-desc { font-size: 0.85rem; color: var(--text-2); margin-bottom: 18px; line-height: 1.65; }
+  .sim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .sim-card { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 16px; background: #f8fafc; }
+  .sim-card .sim-label { font-size: 0.8rem; font-weight: 600; color: var(--text-2); margin-bottom: 8px; }
+  .sim-card .sim-nota { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
   .sim-card .sim-nota.ok { color: var(--green); }
   .sim-card .sim-nota.warn { color: var(--yellow); }
   .sim-card .sim-nota.imposible { color: var(--red); }
-  .sim-card .sim-context { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-style: italic; }
-  .sim-card .sim-sub { font-size: 0.78rem; margin-top: 4px; }
-  .sim-card .ok-text { color: var(--green); }
+  .sim-card .sim-context { font-size: 0.71rem; color: var(--muted); margin-bottom: 6px; font-style: italic; line-height: 1.4; }
+  .sim-card .sim-sub { font-size: 0.78rem; margin-top: 6px; font-weight: 500; }
+  .sim-card .ok-text { color: var(--green-dark); }
   .sim-card .warn-text { color: var(--red); }
 
-  .temas-asig { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  /* Temas */
+  .temas-asig { margin-bottom: 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
   .temas-asig:last-child { margin-bottom: 0; }
-  .temas-asig-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px; background: var(--brand-light); cursor: pointer;
-    user-select: none;
-  }
-  .temas-asig-header:hover { background: #d4e4f7; }
-  .temas-asig-name { font-weight: 700; font-size: 0.95rem; color: var(--brand); flex: 1; }
-  .temas-pond-badge { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: white; color: var(--brand); border: 1px solid var(--brand); }
+  .temas-asig-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #f8fafc; cursor: pointer; user-select: none; transition: background .15s; }
+  .temas-asig-header:hover { background: #f1f5f9; }
+  .temas-asig-name { font-weight: 700; font-size: 0.92rem; color: var(--text); flex: 1; }
+  .temas-pond-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--brand-light); color: var(--brand); border: 1px solid var(--brand-mid); }
   .temas-chevron { font-size: 0.7rem; color: var(--muted); transition: transform .2s; }
   .temas-asig.open .temas-chevron { transform: rotate(180deg); }
-  .temas-body { display: none; padding: 12px 16px; }
+  .temas-body { display: none; padding: 14px 16px; border-top: 1px solid var(--border); }
   .temas-asig.open .temas-body { display: block; }
   .temas-list { list-style: none; padding: 0; margin: 0; }
-  .temas-list li {
-    padding: 7px 0; border-bottom: 1px solid var(--border);
-    font-size: 0.875rem; display: flex; gap: 8px; align-items: flex-start;
-  }
+  .temas-list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; display: flex; gap: 10px; align-items: flex-start; }
   .temas-list li:last-child { border-bottom: none; }
-  .temas-freq { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 1px; }
-  .temas-freq.alta { background: #fce7f3; color: #be185d; }
+  .temas-freq { flex-shrink: 0; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 2px; }
+  .temas-freq.alta { background: #fce7f3; color: #9d174d; }
   .temas-freq.media { background: var(--brand-light); color: var(--brand); }
-  .temas-freq-legend { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; }
-
-  .formula-box {
-    background: var(--gray); border-radius: 8px; padding: 12px 16px;
-    font-size: 0.82rem; color: var(--muted); margin-top: 12px;
-  }
-  .formula-box code { color: var(--brand); font-weight: 600; font-size: 0.9rem; }
-
-  .esp-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  .esp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .esp-item {
-    border: 2px solid var(--border); border-radius: 10px; padding: 10px 12px;
-    display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, background .15s;
-  }
-  .esp-item.selected { border-color: var(--brand); background: var(--brand-light); }
-  .esp-item-top { display: flex; align-items: center; justify-content: space-between; }
-  .esp-item-name { font-size: 0.82rem; font-weight: 600; }
-  .esp-pond-badge {
-    font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 20px;
-    background: var(--gray); color: var(--muted);
-  }
-  .esp-pond-badge.p02 { background: #fce7f3; color: #be185d; }
-  .esp-pond-badge.p01 { background: var(--brand-light); color: var(--brand); }
-  .esp-item input { text-align: center; font-size: 1rem; font-weight: 700; padding: 6px; border-radius: 6px; }
-  .esp-item.selected input { border-color: var(--brand); }
-  .esp-contrib { font-size: 0.75rem; color: var(--brand); font-weight: 600; min-height: 1em; }
-  .esp-auto-info {
-    margin-top: 10px; font-size: 0.82rem; color: var(--muted);
-    background: var(--gray); border-radius: 8px; padding: 8px 12px;
-  }
+  .temas-freq-legend { font-size: 0.75rem; color: var(--muted); margin-bottom: 12px; }
 
   @media (max-width: 600px) {
-    header { padding: 16px; }
-    .card { padding: 16px; }
+    header { padding: 32px 16px 28px; }
+    header h1 { font-size: 1.45rem; }
+    .card { padding: 20px 16px; }
+    .resultado-box .nota-final { font-size: 3.5rem; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Calculadora de Acceso — Universidades de Castilla y León</h1>
-  <p>Calcula tu nota de admisión y simula qué necesitas en la EBAU para entrar al grado que quieres</p>
+  <div class="header-inner">
+    <div class="header-pill">🎓 Universidades de Castilla y León</div>
+    <h1>Calculadora de Acceso a la Universidad</h1>
+    <p>Calcula tu nota de admisión, compara universidades y simula qué necesitas en la EBAU para entrar al grado que quieres</p>
+  </div>
 </header>
 
 <div class="container">
@@ -184,7 +227,7 @@
   </div>
 
   <div class="card">
-    <h2>1. Elige tu grado y universidad</h2>
+    <div class="card-head"><div class="step-badge">1</div><h2>Elige tu grado y universidad</h2></div>
     <div class="selector-row">
       <div>
         <label for="sel-universidad">Universidad</label>
@@ -206,7 +249,7 @@
   </div>
 
   <div class="card">
-    <h2>2. Introduce tus notas</h2>
+    <div class="card-head"><div class="step-badge">2</div><h2>Introduce tus notas</h2></div>
     <div class="notas-grid">
       <div class="nota-field">
         <label for="n-bach">Nota de Bachillerato</label>
@@ -231,7 +274,7 @@
   </div>
 
   <div class="card" id="resultado-card" style="display:none;">
-    <h2>3. Tu nota de admisión</h2>
+    <div class="card-head"><div class="step-badge">3</div><h2>Tu nota de admisión</h2></div>
     <div class="resultado-box">
       <div class="nota-final" id="res-nota">—</div>
       <div class="nota-label">sobre 14 puntos máximos</div>
@@ -241,7 +284,7 @@
   </div>
 
   <div class="card" id="univ-card" style="display:none;">
-    <h2>4. Comparativa de universidades — mismo grado</h2>
+    <div class="card-head"><div class="step-badge">4</div><h2>Comparativa de universidades — mismo grado</h2></div>
     <table class="univ-table">
       <thead>
         <tr>
@@ -258,7 +301,7 @@
   </div>
 
   <div class="card" id="sim-card" style="display:none;">
-    <h2>5. Simulador — ¿Qué nota mínima necesito?</h2>
+    <div class="card-head"><div class="step-badge">5</div><h2>Simulador — ¿Qué nota mínima necesito?</h2></div>
     <p class="sim-desc">
       Deja en blanco la prueba que quieres simular y rellena el resto. Te diremos qué nota mínima necesitas en esa prueba para llegar al corte.
     </p>
@@ -266,7 +309,7 @@
   </div>
 
   <div class="card" id="temas-card" style="display:none;">
-    <h2>6. Temas frecuentes en la PAU CyL (2021–2024)</h2>
+    <div class="card-head"><div class="step-badge">6</div><h2>Temas frecuentes en la PAU CyL (2021–2024)</h2></div>
     <p class="sim-desc">Bloques y contenidos que han aparecido con más frecuencia en los exámenes de selectividad de Castilla y León para las asignaturas ponderadas de este grado.</p>
     <div id="temas-grid"></div>
   </div>
@@ -274,15 +317,15 @@
 </div>
 
 <div class="container" style="padding-top:0;">
-  <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-    <span style="font-size:1.3rem;">📋</span>
+  <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <div style="width:46px;height:46px;background:var(--brand-light);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📋</div>
     <div style="flex:1;min-width:200px;">
-      <div style="font-size:0.85rem;font-weight:600;color:var(--text);">Notas de corte oficiales 2025/2026</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Disponibles del 9 de julio al 22 de octubre en el portal de preinscripción de las universidades de CyL</div>
+      <div style="font-size:0.88rem;font-weight:700;color:var(--text);">Notas de corte oficiales</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:3px;">Disponibles del 9 de julio al 22 de octubre en el portal de preinscripción de las universidades de CyL</div>
     </div>
     <a href="https://precyl.usal.es/notas-corte/" target="_blank" rel="noopener"
-       style="display:inline-block;padding:9px 18px;background:var(--brand);color:white;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .15s;"
-       onmouseover="this.style.background='#0e3a6e'" onmouseout="this.style.background='var(--brand)'">
+       style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--brand);color:white;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .15s,transform .1s;"
+       onmouseover="this.style.background='#1d4ed8';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='var(--brand)';this.style.transform='none'">
       Ver notas de corte →
     </a>
   </div>
