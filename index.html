@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<title>Calculadora Acceso Universidades CyL</title>
+<title>Calculadora de Acceso a Universidades Públicas de España</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -210,7 +210,7 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-pill">🎓 Universidades de Castilla y León</div>
+    <div class="header-pill">🎓 Universidades Públicas de España</div>
     <h1>Calculadora de Acceso a la Universidad</h1>
     <p>Calcula tu nota de admisión, compara universidades y simula qué necesitas en la EBAU para entrar al grado que quieres</p>
   </div>
@@ -219,11 +219,17 @@
 <div class="container">
 
   <div class="aviso-beta">
-    ⚠️ <strong>Aplicación en pruebas.</strong> Las notas de corte mostradas pueden estar desactualizadas. El autor no se responsabiliza de la exactitud de los datos. Consulta siempre las webs oficiales:
+    ⚠️ <strong>Aplicación en pruebas.</strong> Las notas de corte son de 2025-26 (fuente: notasdecorte.es) y pueden no estar actualizadas. Las <strong>ponderaciones de fase específica para universidades de Madrid son aproximadas</strong> — compruébalas siempre en la web oficial de cada universidad. Consulta siempre las webs oficiales:
     <a href="https://www.uva.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UVA</a> ·
     <a href="https://www.usal.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">USAL</a> ·
     <a href="https://www.ubu.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UBU</a> ·
-    <a href="https://www.unileon.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">ULE</a>
+    <a href="https://www.unileon.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">ULE</a> ·
+    <a href="https://www.ucm.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UCM</a> ·
+    <a href="https://www.uam.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UAM</a> ·
+    <a href="https://www.uc3m.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UC3M</a> ·
+    <a href="https://www.urjc.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">URJC</a> ·
+    <a href="https://www.upm.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UPM</a> ·
+    <a href="https://www.uah.es" target="_blank" rel="noopener" style="color:#92400e;font-weight:600;">UAH</a>
   </div>
 
   <div id="aviso-notas-nuevas" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;padding:13px 16px;font-size:0.82rem;color:#1e3a8a;margin-bottom:20px;line-height:1.65;">
@@ -236,13 +242,17 @@
     <div class="card-head"><div class="step-badge">1</div><h2>Elige tu grado y universidad</h2></div>
     <div class="selector-row">
       <div>
+        <label for="sel-ccaa">Comunidad autónoma</label>
+        <select id="sel-ccaa">
+          <option value="">Toda España</option>
+          <option value="CYL" selected>Castilla y León</option>
+          <option value="MAD">Madrid</option>
+        </select>
+      </div>
+      <div>
         <label for="sel-universidad">Universidad</label>
         <select id="sel-universidad">
-          <option value="">Todas las universidades CyL</option>
-          <option value="UVA">UVA — Universidad de Valladolid</option>
-          <option value="USAL">USAL — Universidad de Salamanca</option>
-          <option value="UBU">UBU — Universidad de Burgos</option>
-          <option value="ULE">ULE — Universidad de León</option>
+          <option value="">Todas</option>
         </select>
       </div>
       <div>
@@ -548,7 +558,256 @@ const GRADOS = [
   { id: 342, nombre: "Doble: Ing. Minera + Ing. de la Energía",                   universidad: "ULE",  corte: 5.000,  ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
   { id: 343, nombre: "Doble: Historia + Historia del Arte",                        universidad: "ULE",  corte: 5.000,  ponderaciones: { "Historia del Arte": 0.2, "Fundamentos del Arte II": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
   { id: 344, nombre: "Doble: Ing. Forestal + Ciencias Ambientales",               universidad: "ULE",  corte: 5.000,  ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+
+  // ══════════════ MADRID ══════════════
+  // Ponderaciones aproximadas — verificar en la web oficial de cada universidad
+
+  // ── UCM (Universidad Complutense de Madrid) ──
+  { id: 400, nombre: "Doble: Matemáticas + Física",                        universidad: "UCM",  ccaa: "MAD", corte: 13.698, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 401, nombre: "Doble: Ing. Informática + Matemáticas",              universidad: "UCM",  ccaa: "MAD", corte: 13.465, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 402, nombre: "Medicina",                                            universidad: "UCM",  ccaa: "MAD", corte: 13.100, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 403, nombre: "Ing. de Datos e Inteligencia Artificial",             universidad: "UCM",  ccaa: "MAD", corte: 12.775, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 404, nombre: "Doble: Economía + Matemáticas",                      universidad: "UCM",  ccaa: "MAD", corte: 12.716, ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 405, nombre: "Odontología",                                         universidad: "UCM",  ccaa: "MAD", corte: 12.652, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
+  { id: 406, nombre: "Ingeniería Matemática",                               universidad: "UCM",  ccaa: "MAD", corte: 12.625, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 407, nombre: "Doble: Química + Bioquímica",                         universidad: "UCM",  ccaa: "MAD", corte: 12.617, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 408, nombre: "Doble: Farmacia + Nutrición Humana y Dietética",      universidad: "UCM",  ccaa: "MAD", corte: 12.328, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 409, nombre: "Doble: Economía + Relaciones Internacionales",        universidad: "UCM",  ccaa: "MAD", corte: 12.315, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 410, nombre: "Bioquímica",                                          universidad: "UCM",  ccaa: "MAD", corte: 12.262, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 411, nombre: "Matemáticas",                                         universidad: "UCM",  ccaa: "MAD", corte: 12.250, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 412, nombre: "Matemáticas y Ciencia de Datos",                      universidad: "UCM",  ccaa: "MAD", corte: 11.964, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 413, nombre: "Veterinaria",                                         universidad: "UCM",  ccaa: "MAD", corte: 11.814, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 414, nombre: "Física",                                              universidad: "UCM",  ccaa: "MAD", corte: 11.811, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 415, nombre: "Diseño",                                              universidad: "UCM",  ccaa: "MAD", corte: 11.650, ponderaciones: { "Fundamentos del Arte II": 0.2, "Historia del Arte": 0.1 } },
+  { id: 416, nombre: "Farmacia",                                            universidad: "UCM",  ccaa: "MAD", corte: 11.641, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 417, nombre: "Enfermería",                                          universidad: "UCM",  ccaa: "MAD", corte: 11.603, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 418, nombre: "Fisioterapia",                                        universidad: "UCM",  ccaa: "MAD", corte: 11.463, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 419, nombre: "Doble: Maestro Ed. Primaria + Pedagogía",             universidad: "UCM",  ccaa: "MAD", corte: 11.462, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 420, nombre: "Doble: Ing. Informática + ADE",                       universidad: "UCM",  ccaa: "MAD", corte: 11.316, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 421, nombre: "Criminología",                                        universidad: "UCM",  ccaa: "MAD", corte: 11.233, ponderaciones: { "Matemáticas CCSS II": 0.2, "Latín II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 422, nombre: "Doble: Maestro Ed. Infantil + Maestro Ed. Primaria",  universidad: "UCM",  ccaa: "MAD", corte: 11.199, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 423, nombre: "Relaciones Internacionales",                          universidad: "UCM",  ccaa: "MAD", corte: 11.185, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 424, nombre: "Ingeniería Química",                                  universidad: "UCM",  ccaa: "MAD", corte: 11.033, ponderaciones: { "Química": 0.2, "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 425, nombre: "Ciencia de los Datos Aplicada",                       universidad: "UCM",  ccaa: "MAD", corte: 10.937, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 426, nombre: "Ingeniería Informática",                              universidad: "UCM",  ccaa: "MAD", corte: 10.761, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 427, nombre: "ADE",                                                 universidad: "UCM",  ccaa: "MAD", corte: 10.714, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 428, nombre: "Psicología",                                          universidad: "UCM",  ccaa: "MAD", corte: 10.525, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.2 } },
+  { id: 429, nombre: "Publicidad y Relaciones Públicas",                    universidad: "UCM",  ccaa: "MAD", corte: 10.364, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 430, nombre: "Maestro en Educación Primaria",                       universidad: "UCM",  ccaa: "MAD", corte: 10.262, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 431, nombre: "Doble: Derecho + ADE",                                universidad: "UCM",  ccaa: "MAD", corte: 10.177, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 432, nombre: "Doble: Derecho + Ciencias Políticas",                 universidad: "UCM",  ccaa: "MAD", corte: 10.150, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 433, nombre: "Ingeniería del Software",                             universidad: "UCM",  ccaa: "MAD", corte: 10.150, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 434, nombre: "Química",                                             universidad: "UCM",  ccaa: "MAD", corte: 10.111, ponderaciones: { "Química": 0.2, "Biología": 0.2, "Matemáticas II": 0.1 } },
+  { id: 435, nombre: "Nutrición Humana y Dietética",                        universidad: "UCM",  ccaa: "MAD", corte: 10.100, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 436, nombre: "Bellas Artes",                                        universidad: "UCM",  ccaa: "MAD", corte:  9.936, ponderaciones: { "Fundamentos del Arte II": 0.2, "Historia del Arte": 0.1 } },
+  { id: 437, nombre: "Biología",                                            universidad: "UCM",  ccaa: "MAD", corte:  9.936, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Matemáticas II": 0.1 } },
+  { id: 438, nombre: "Desarrollo de Videojuegos",                           universidad: "UCM",  ccaa: "MAD", corte:  9.689, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 439, nombre: "Economía",                                            universidad: "UCM",  ccaa: "MAD", corte:  9.545, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 440, nombre: "Comunicación Audiovisual",                            universidad: "UCM",  ccaa: "MAD", corte:  9.544, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 441, nombre: "Ingeniería de Computadores",                          universidad: "UCM",  ccaa: "MAD", corte:  9.480, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 442, nombre: "Podología",                                           universidad: "UCM",  ccaa: "MAD", corte:  9.453, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 443, nombre: "Finanzas, Banca y Seguros",                           universidad: "UCM",  ccaa: "MAD", corte:  9.420, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 444, nombre: "Ingeniería de Materiales",                            universidad: "UCM",  ccaa: "MAD", corte:  9.203, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Química": 0.1 } },
+
+  // ── UAM (Universidad Autónoma de Madrid) ──
+  { id: 450, nombre: "Doble: Ing. Informática + Matemáticas",              universidad: "UAM",  ccaa: "MAD", corte: 13.136, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 451, nombre: "Medicina",                                            universidad: "UAM",  ccaa: "MAD", corte: 12.978, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 452, nombre: "Doble: Historia + Estudios Internacionales",         universidad: "UAM",  ccaa: "MAD", corte: 12.964, ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 453, nombre: "Doble: Historia + Historia del Arte",                universidad: "UAM",  ccaa: "MAD", corte: 12.513, ponderaciones: { "Historia del Arte": 0.2, "Fundamentos del Arte II": 0.2, "Latín II": 0.1 } },
+  { id: 454, nombre: "Ingeniería Biomédica",                               universidad: "UAM",  ccaa: "MAD", corte: 12.500, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Biología": 0.1, "Química": 0.1 } },
+  { id: 455, nombre: "Doble: Filosofía + Historia",                        universidad: "UAM",  ccaa: "MAD", corte: 12.264, ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 456, nombre: "Bioquímica",                                         universidad: "UAM",  ccaa: "MAD", corte: 12.067, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 457, nombre: "Física",                                             universidad: "UAM",  ccaa: "MAD", corte: 12.014, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 458, nombre: "Matemáticas",                                        universidad: "UAM",  ccaa: "MAD", corte: 11.937, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 459, nombre: "Filosofía, Política y Economía",                     universidad: "UAM",  ccaa: "MAD", corte: 11.820, ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 460, nombre: "Enfermería",                                         universidad: "UAM",  ccaa: "MAD", corte: 11.714, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 461, nombre: "Ciencias Políticas",                                 universidad: "UAM",  ccaa: "MAD", corte: 11.599, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 462, nombre: "Derecho",                                            universidad: "UAM",  ccaa: "MAD", corte: 11.575, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 463, nombre: "Ciencia e Ingeniería de Datos",                      universidad: "UAM",  ccaa: "MAD", corte: 11.311, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 464, nombre: "Análisis de Datos para la Empresa",                  universidad: "UAM",  ccaa: "MAD", corte: 11.232, ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 465, nombre: "Doble: Derecho + ADE",                               universidad: "UAM",  ccaa: "MAD", corte: 10.928, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 466, nombre: "Economía y Finanzas",                                universidad: "UAM",  ccaa: "MAD", corte: 10.905, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 467, nombre: "Doble: Nutrición + Ciencia y Tecnología Alimentaria",universidad: "UAM",  ccaa: "MAD", corte: 10.870, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 468, nombre: "Estudios Internacionales",                           universidad: "UAM",  ccaa: "MAD", corte: 10.853, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 469, nombre: "Gestión Aeronáutica",                                universidad: "UAM",  ccaa: "MAD", corte: 10.715, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 470, nombre: "Ingeniería Informática",                             universidad: "UAM",  ccaa: "MAD", corte: 10.715, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 471, nombre: "CAFYD",                                              universidad: "UAM",  ccaa: "MAD", corte: 10.560, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 472, nombre: "Ingeniería Química",                                 universidad: "UAM",  ccaa: "MAD", corte: 10.528, ponderaciones: { "Química": 0.2, "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 473, nombre: "Psicología",                                         universidad: "UAM",  ccaa: "MAD", corte: 10.426, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.2 } },
+  { id: 474, nombre: "Doble: Maestro Ed. Infantil + Maestro Ed. Primaria", universidad: "UAM",  ccaa: "MAD", corte: 10.278, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 475, nombre: "ADE",                                                universidad: "UAM",  ccaa: "MAD", corte: 10.203, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 476, nombre: "Nutrición Humana y Dietética",                       universidad: "UAM",  ccaa: "MAD", corte: 10.003, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 477, nombre: "Química",                                            universidad: "UAM",  ccaa: "MAD", corte:  9.986, ponderaciones: { "Química": 0.2, "Biología": 0.2, "Matemáticas II": 0.1 } },
+  { id: 478, nombre: "Magisterio en Educación Primaria",                   universidad: "UAM",  ccaa: "MAD", corte:  9.939, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 479, nombre: "Biología",                                           universidad: "UAM",  ccaa: "MAD", corte:  9.714, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Matemáticas II": 0.1 } },
+  { id: 480, nombre: "Economía",                                           universidad: "UAM",  ccaa: "MAD", corte:  9.603, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 481, nombre: "Ingeniería de Telecomunicación",                     universidad: "UAM",  ccaa: "MAD", corte:  9.560, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 482, nombre: "Magisterio en Educación Infantil",                   universidad: "UAM",  ccaa: "MAD", corte:  8.911, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 483, nombre: "Ciencias de la Alimentación",                        universidad: "UAM",  ccaa: "MAD", corte:  8.528, ponderaciones: { "Biología": 0.2, "Química": 0.2 } },
+  { id: 484, nombre: "Ciencias Ambientales",                               universidad: "UAM",  ccaa: "MAD", corte:  7.686, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 485, nombre: "Traducción e Interpretación",                        universidad: "UAM",  ccaa: "MAD", corte:  6.700, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 486, nombre: "Doble: Ciencias Ambientales + Geografía",            universidad: "UAM",  ccaa: "MAD", corte:  6.580, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.1, "Geografía": 0.1 } },
+
+  // ── UC3M (Universidad Carlos III de Madrid) ──
+  { id: 500, nombre: "Doble: Ing. Física + Ing. en Tec. Industriales",     universidad: "UC3M", ccaa: "MAD", corte: 13.464, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 501, nombre: "Ing. en Tec. Industriales + Máster Integrado",       universidad: "UC3M", ccaa: "MAD", corte: 13.414, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 502, nombre: "Ingeniería Aeroespacial",                            universidad: "UC3M", ccaa: "MAD", corte: 13.300, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 503, nombre: "Ingeniería Física",                                  universidad: "UC3M", ccaa: "MAD", corte: 13.225, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 504, nombre: "Doble: Estudios Internacionales + Derecho",          universidad: "UC3M", ccaa: "MAD", corte: 13.175, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 505, nombre: "Doble: Estudios Internacionales + ADE",              universidad: "UC3M", ccaa: "MAD", corte: 13.119, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 506, nombre: "Neurociencia",                                       universidad: "UC3M", ccaa: "MAD", corte: 13.100, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Matemáticas II": 0.1 } },
+  { id: 507, nombre: "Ing. de Telecomunicación + Máster Integrado",        universidad: "UC3M", ccaa: "MAD", corte: 12.889, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 508, nombre: "Ingeniería Biomédica",                               universidad: "UC3M", ccaa: "MAD", corte: 12.843, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Biología": 0.1, "Química": 0.1 } },
+  { id: 509, nombre: "Doble: Estudios Internacionales + Economía",         universidad: "UC3M", ccaa: "MAD", corte: 12.830, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 510, nombre: "Ing. Informática + Máster Integrado",                universidad: "UC3M", ccaa: "MAD", corte: 12.825, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 511, nombre: "Doble: Derecho + ADE",                               universidad: "UC3M", ccaa: "MAD", corte: 12.600, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 512, nombre: "Doble: Estudios Internacionales + Ciencias Políticas",universidad: "UC3M", ccaa: "MAD", corte: 12.475, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 513, nombre: "Doble: Derecho + Economía",                          universidad: "UC3M", ccaa: "MAD", corte: 12.239, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 514, nombre: "Matemáticas y Computación",                          universidad: "UC3M", ccaa: "MAD", corte: 12.224, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 515, nombre: "Empresa y Tecnología",                               universidad: "UC3M", ccaa: "MAD", corte: 12.213, ponderaciones: { "Matemáticas CCSS II": 0.2, "Matemáticas II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 516, nombre: "Doble: Ciencia e Ing. de Datos + Ing. Telecomunicación",universidad: "UC3M", ccaa: "MAD", corte: 12.124, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 517, nombre: "Filosofía, Política y Economía",                     universidad: "UC3M", ccaa: "MAD", corte: 12.104, ponderaciones: { "Matemáticas CCSS II": 0.1, "Latín II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 518, nombre: "Estudios Internacionales",                           universidad: "UC3M", ccaa: "MAD", corte: 12.063, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 519, nombre: "Doble: Ing. Informática + ADE",                      universidad: "UC3M", ccaa: "MAD", corte: 12.053, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 520, nombre: "Matemática Aplicada",                                universidad: "UC3M", ccaa: "MAD", corte: 12.024, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 521, nombre: "Ingeniería en Tecnologías Industriales",             universidad: "UC3M", ccaa: "MAD", corte: 11.966, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 522, nombre: "Inteligencia Artificial",                            universidad: "UC3M", ccaa: "MAD", corte: 11.775, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 523, nombre: "Ingeniería Mecánica",                                universidad: "UC3M", ccaa: "MAD", corte: 11.664, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 524, nombre: "Análisis de Datos para la Empresa",                  universidad: "UC3M", ccaa: "MAD", corte: 11.567, ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 525, nombre: "Derecho",                                            universidad: "UC3M", ccaa: "MAD", corte: 11.561, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 526, nombre: "Ciencia e Ingeniería de Datos",                      universidad: "UC3M", ccaa: "MAD", corte: 11.556, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 527, nombre: "ADE",                                                universidad: "UC3M", ccaa: "MAD", corte: 11.516, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 528, nombre: "Ingeniería Robótica",                                universidad: "UC3M", ccaa: "MAD", corte: 11.489, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.1 } },
+  { id: 529, nombre: "Economía",                                           universidad: "UC3M", ccaa: "MAD", corte: 11.263, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 530, nombre: "Ingeniería de la Energía",                           universidad: "UC3M", ccaa: "MAD", corte: 11.175, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 531, nombre: "Finanzas y Contabilidad",                            universidad: "UC3M", ccaa: "MAD", corte: 11.043, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 532, nombre: "Ingeniería Eléctrica",                               universidad: "UC3M", ccaa: "MAD", corte: 10.967, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 533, nombre: "Ingeniería Informática",                             universidad: "UC3M", ccaa: "MAD", corte: 10.978, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 534, nombre: "Doble: Periodismo + Comunicación Audiovisual",       universidad: "UC3M", ccaa: "MAD", corte: 10.939, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 535, nombre: "Ingeniería de Telecomunicación",                     universidad: "UC3M", ccaa: "MAD", corte: 10.713, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 536, nombre: "Ingeniería Electrónica Industrial",                  universidad: "UC3M", ccaa: "MAD", corte: 10.636, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 537, nombre: "Ingeniería de Comunicaciones Móviles y Espaciales",  universidad: "UC3M", ccaa: "MAD", corte: 10.253, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 538, nombre: "Ingeniería de Sonido e Imagen",                      universidad: "UC3M", ccaa: "MAD", corte: 10.115, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.1 } },
+  { id: 539, nombre: "Comunicación Audiovisual",                           universidad: "UC3M", ccaa: "MAD", corte: 10.109, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 540, nombre: "Sostenibilidad Urbana",                              universidad: "UC3M", ccaa: "MAD", corte:  9.920, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Geografía": 0.1 } },
+  { id: 541, nombre: "Gestión de la Información y Contenidos Digitales",   universidad: "UC3M", ccaa: "MAD", corte:  9.836, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 542, nombre: "Ingeniería de Internet",                             universidad: "UC3M", ccaa: "MAD", corte:  9.764, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+
+  // ── URJC (Universidad Rey Juan Carlos) ──
+  { id: 550, nombre: "Doble: Ing. Informática + Matemáticas",              universidad: "URJC", ccaa: "MAD", corte: 13.089, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 551, nombre: "Doble: Derecho + Relaciones Internacionales",        universidad: "URJC", ccaa: "MAD", corte: 13.061, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 552, nombre: "Medicina",                                           universidad: "URJC", ccaa: "MAD", corte: 12.932, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 553, nombre: "Doble: Ing. del Software + Matemáticas",             universidad: "URJC", ccaa: "MAD", corte: 12.604, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 554, nombre: "Odontología",                                        universidad: "URJC", ccaa: "MAD", corte: 12.590, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1 } },
+  { id: 555, nombre: "Doble: Economía + Matemáticas",                      universidad: "URJC", ccaa: "MAD", corte: 12.489, ponderaciones: { "Matemáticas II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 556, nombre: "Doble: Criminología + Derecho",                      universidad: "URJC", ccaa: "MAD", corte: 12.433, ponderaciones: { "Matemáticas CCSS II": 0.2, "Latín II": 0.2, "Historia del Arte": 0.1 } },
+  { id: 557, nombre: "Ingeniería Biomédica",                               universidad: "URJC", ccaa: "MAD", corte: 12.339, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Biología": 0.1, "Química": 0.1 } },
+  { id: 558, nombre: "Doble: Publicidad y RR.PP. + Marketing",             universidad: "URJC", ccaa: "MAD", corte: 12.329, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 559, nombre: "Doble: Criminología + Psicología",                   universidad: "URJC", ccaa: "MAD", corte: 12.314, ponderaciones: { "Matemáticas CCSS II": 0.2, "Biología": 0.2, "Latín II": 0.1 } },
+  { id: 560, nombre: "Doble: RRII + Ciencia Política",                     universidad: "URJC", ccaa: "MAD", corte: 12.267, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 561, nombre: "Doble: Relaciones Internacionales + Periodismo",     universidad: "URJC", ccaa: "MAD", corte: 12.216, ponderaciones: { "Literatura Castellana": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 562, nombre: "Ingeniería Aeroespacial",                            universidad: "URJC", ccaa: "MAD", corte: 12.114, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 563, nombre: "Doble: ADE + Marketing",                             universidad: "URJC", ccaa: "MAD", corte: 12.014, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 564, nombre: "Doble: Educación Infantil + Educación Primaria",     universidad: "URJC", ccaa: "MAD", corte: 11.961, ponderaciones: { "Biología": 0.1, "Matemáticas CCSS II": 0.1 } },
+  { id: 565, nombre: "Farmacia",                                           universidad: "URJC", ccaa: "MAD", corte: 11.778, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 566, nombre: "Matemáticas",                                        universidad: "URJC", ccaa: "MAD", corte: 11.753, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 567, nombre: "Doble: Economía + Derecho",                          universidad: "URJC", ccaa: "MAD", corte: 11.728, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Latín II": 0.1 } },
+  { id: 568, nombre: "Doble: Bellas Artes + Diseño",                       universidad: "URJC", ccaa: "MAD", corte: 11.685, ponderaciones: { "Fundamentos del Arte II": 0.2, "Historia del Arte": 0.1 } },
+  { id: 569, nombre: "Doble: Ing. Informática + ADE",                      universidad: "URJC", ccaa: "MAD", corte: 11.678, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 570, nombre: "Enfermería",                                         universidad: "URJC", ccaa: "MAD", corte: 11.675, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 571, nombre: "Relaciones Internacionales",                         universidad: "URJC", ccaa: "MAD", corte: 10.992, ponderaciones: { "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1, "Geografía": 0.1 } },
+  { id: 572, nombre: "Psicología",                                         universidad: "URJC", ccaa: "MAD", corte: 10.989, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.2 } },
+  { id: 573, nombre: "Fisioterapia",                                       universidad: "URJC", ccaa: "MAD", corte: 10.954, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 574, nombre: "Ingeniería en Tecnologías Industriales",             universidad: "URJC", ccaa: "MAD", corte: 10.952, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 575, nombre: "Ingeniería de la Ciberseguridad",                    universidad: "URJC", ccaa: "MAD", corte: 10.803, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 576, nombre: "CAFYD",                                              universidad: "URJC", ccaa: "MAD", corte: 10.625, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 577, nombre: "Marketing",                                          universidad: "URJC", ccaa: "MAD", corte: 10.624, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 578, nombre: "Ingeniería Informática",                             universidad: "URJC", ccaa: "MAD", corte: 10.503, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 579, nombre: "Ingeniería Mecánica",                                universidad: "URJC", ccaa: "MAD", corte: 11.378, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 580, nombre: "Ingeniería en Organización Industrial",              universidad: "URJC", ccaa: "MAD", corte: 11.257, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 581, nombre: "Doble: Ing. Informática + Ing. del Software",        universidad: "URJC", ccaa: "MAD", corte: 11.323, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 582, nombre: "Doble: Diseño y Desarrollo de Videojuegos + Ing. de Computadores", universidad: "URJC", ccaa: "MAD", corte: 11.102, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 583, nombre: "Doble: Ing. Química + Ing. en Organización Industrial", universidad: "URJC", ccaa: "MAD", corte: 11.103, ponderaciones: { "Química": 0.2, "Matemáticas II": 0.2, "Física": 0.1 } },
+
+  // ── UPM (Universidad Politécnica de Madrid) ──
+  { id: 600, nombre: "Ing. en Tec. Industriales + Máster Integrado",       universidad: "UPM",  ccaa: "MAD", corte: 13.525, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 601, nombre: "Ing. de Tec. Aeroespaciales + Máster Integrado",     universidad: "UPM",  ccaa: "MAD", corte: 13.411, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 602, nombre: "Ing. Biomédica + Máster Integrado",                  universidad: "UPM",  ccaa: "MAD", corte: 13.150, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Biología": 0.1, "Química": 0.1 } },
+  { id: 603, nombre: "Fundamentos de la Arquitectura + Máster Integrado",  universidad: "UPM",  ccaa: "MAD", corte: 13.089, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 604, nombre: "Doble: Ing. Diseño Industrial + Ing. Mecánica",      universidad: "UPM",  ccaa: "MAD", corte: 12.878, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 605, nombre: "Biotecnología",                                       universidad: "UPM",  ccaa: "MAD", corte: 12.728, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 606, nombre: "Ingeniería de Organización",                         universidad: "UPM",  ccaa: "MAD", corte: 12.636, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 607, nombre: "Ingeniería Biomédica",                               universidad: "UPM",  ccaa: "MAD", corte: 12.553, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Biología": 0.1, "Química": 0.1 } },
+  { id: 608, nombre: "Ingeniería Aeroespacial",                            universidad: "UPM",  ccaa: "MAD", corte: 12.484, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 609, nombre: "Ing. en Diseño Industrial y Desarrollo de Producto", universidad: "UPM",  ccaa: "MAD", corte: 12.461, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Dibujo Técnico II": 0.2 } },
+  { id: 610, nombre: "Ingeniería de Tecnologías Aeroespaciales",           universidad: "UPM",  ccaa: "MAD", corte: 12.363, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 611, nombre: "Ciencia de Datos e Inteligencia Artificial",         universidad: "UPM",  ccaa: "MAD", corte: 12.139, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 612, nombre: "Ingeniería en Tecnologías Industriales",             universidad: "UPM",  ccaa: "MAD", corte: 12.114, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 613, nombre: "Matemáticas",                                        universidad: "UPM",  ccaa: "MAD", corte: 12.058, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 614, nombre: "Arquitectura Naval + Máster Integrado",              universidad: "UPM",  ccaa: "MAD", corte: 11.978, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 615, nombre: "Ing. Civil y Territorial + Máster Integrado",        universidad: "UPM",  ccaa: "MAD", corte: 11.961, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 616, nombre: "Ingeniería Mecánica",                                universidad: "UPM",  ccaa: "MAD", corte: 11.867, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 617, nombre: "Ingeniería Química",                                 universidad: "UPM",  ccaa: "MAD", corte: 11.707, ponderaciones: { "Química": 0.2, "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 618, nombre: "Doble: Ing. Informática + ADE",                      universidad: "UPM",  ccaa: "MAD", corte: 11.589, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 619, nombre: "Ing. del Software + Máster Integrado",               universidad: "UPM",  ccaa: "MAD", corte: 11.533, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 620, nombre: "Matemáticas e Informática",                          universidad: "UPM",  ccaa: "MAD", corte: 11.507, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 621, nombre: "Gestión y Operaciones del Transporte Aéreo",         universidad: "UPM",  ccaa: "MAD", corte: 11.478, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 622, nombre: "Ingeniería Informática",                             universidad: "UPM",  ccaa: "MAD", corte: 11.425, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 623, nombre: "Doble: Ing. Eléctrica + Ing. Electrónica Industrial",universidad: "UPM",  ccaa: "MAD", corte: 11.361, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 624, nombre: "Ingeniería y Sistemas de Datos",                     universidad: "UPM",  ccaa: "MAD", corte: 11.128, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 625, nombre: "Fundamentos de la Arquitectura",                     universidad: "UPM",  ccaa: "MAD", corte: 11.091, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 626, nombre: "Ingeniería de la Energía",                           universidad: "UPM",  ccaa: "MAD", corte: 11.039, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2 } },
+  { id: 627, nombre: "Ingeniería Agrícola + Máster Integrado",             universidad: "UPM",  ccaa: "MAD", corte: 10.814, ponderaciones: { "Biología": 0.2, "Matemáticas II": 0.2, "Química": 0.1 } },
+  { id: 628, nombre: "Ing. de Materiales + Máster Integrado",              universidad: "UPM",  ccaa: "MAD", corte: 10.728, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Química": 0.1 } },
+  { id: 629, nombre: "Ingeniería Electrónica Industrial y Automática",     universidad: "UPM",  ccaa: "MAD", corte: 10.670, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 630, nombre: "Ingeniería Marítima",                                universidad: "UPM",  ccaa: "MAD", corte: 10.467, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.1 } },
+  { id: 631, nombre: "Ingeniería Eléctrica",                               universidad: "UPM",  ccaa: "MAD", corte: 10.450, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 632, nombre: "Ingeniería Geológica",                               universidad: "UPM",  ccaa: "MAD", corte: 10.388, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Química": 0.1 } },
+  { id: 633, nombre: "Ingeniería Civil y Territorial",                     universidad: "UPM",  ccaa: "MAD", corte: 10.053, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 634, nombre: "Ingeniería de Materiales",                           universidad: "UPM",  ccaa: "MAD", corte:  9.561, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1, "Química": 0.1 } },
+  { id: 635, nombre: "Ingeniería de Computadores",                         universidad: "UPM",  ccaa: "MAD", corte:  9.311, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 636, nombre: "Sistemas de Información",                            universidad: "UPM",  ccaa: "MAD", corte:  9.080, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 637, nombre: "CAFYD",                                              universidad: "UPM",  ccaa: "MAD", corte:  8.925, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.1 } },
+
+  // ── UAH (Universidad de Alcalá) ──
+  { id: 650, nombre: "Medicina",                                           universidad: "UAH",  ccaa: "MAD", corte: 12.871, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Física": 0.1, "Matemáticas II": 0.1 } },
+  { id: 651, nombre: "Biología Sanitaria",                                 universidad: "UAH",  ccaa: "MAD", corte: 11.839, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Matemáticas II": 0.1 } },
+  { id: 652, nombre: "Física e Instrumentación Espacial",                  universidad: "UAH",  ccaa: "MAD", corte: 11.830, ponderaciones: { "Física": 0.2, "Matemáticas II": 0.2 } },
+  { id: 653, nombre: "Criminalística: Ciencias y Tecnologías Forenses",    universidad: "UAH",  ccaa: "MAD", corte: 11.636, ponderaciones: { "Matemáticas CCSS II": 0.2, "Biología": 0.2, "Química": 0.1 } },
+  { id: 654, nombre: "Ingeniería en Tecnologías Industriales",             universidad: "UAH",  ccaa: "MAD", corte: 11.614, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 655, nombre: "Enfermería",                                         universidad: "UAH",  ccaa: "MAD", corte: 11.426, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 656, nombre: "Farmacia",                                           universidad: "UAH",  ccaa: "MAD", corte: 11.220, ponderaciones: { "Biología": 0.2, "Química": 0.2, "Matemáticas II": 0.1 } },
+  { id: 657, nombre: "Economía y Negocios Internacionales",                universidad: "UAH",  ccaa: "MAD", corte: 11.203, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 658, nombre: "Fisioterapia",                                       universidad: "UAH",  ccaa: "MAD", corte: 10.850, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 659, nombre: "Ingeniería Informática",                             universidad: "UAH",  ccaa: "MAD", corte: 10.700, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 660, nombre: "Doble: Ing. Informática + ADE",                      universidad: "UAH",  ccaa: "MAD", corte: 10.436, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Economía de la Empresa": 0.1 } },
+  { id: 661, nombre: "CAFYD",                                              universidad: "UAH",  ccaa: "MAD", corte: 10.325, ponderaciones: { "Biología": 0.2, "Matemáticas CCSS II": 0.1 } },
+  { id: 662, nombre: "Fundamentos de Arquitectura y Urbanismo",            universidad: "UAH",  ccaa: "MAD", corte: 10.148, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Dibujo Técnico II": 0.2 } },
+  { id: 663, nombre: "Matemáticas y Computación",                          universidad: "UAH",  ccaa: "MAD", corte: 10.064, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 664, nombre: "Ingeniería Electrónica y Automática Industrial",     universidad: "UAH",  ccaa: "MAD", corte:  9.976, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 665, nombre: "Química",                                            universidad: "UAH",  ccaa: "MAD", corte:  9.864, ponderaciones: { "Química": 0.2, "Biología": 0.2, "Matemáticas II": 0.1 } },
+  { id: 666, nombre: "Biología",                                           universidad: "UAH",  ccaa: "MAD", corte:  9.700, ponderaciones: { "Biología": 0.2, "Química": 0.1, "Matemáticas II": 0.1 } },
+  { id: 667, nombre: "Doble: Derecho + ADE",                               universidad: "UAH",  ccaa: "MAD", corte:  9.516, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 668, nombre: "Doble: Estudios Ingleses + Lenguas Modernas y Traducción", universidad: "UAH", ccaa: "MAD", corte: 9.334, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 669, nombre: "ADE",                                                universidad: "UAH",  ccaa: "MAD", corte:  9.225, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 670, nombre: "Doble: Ing. Electrónica de Comunicaciones + Automática", universidad: "UAH", ccaa: "MAD", corte: 8.987, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.2, "Tecnología e Ingeniería II": 0.2 } },
+  { id: 671, nombre: "Ingeniería de Computadores",                         universidad: "UAH",  ccaa: "MAD", corte:  8.575, ponderaciones: { "Matemáticas II": 0.2, "Tecnología e Ingeniería II": 0.2, "Física": 0.1 } },
+  { id: 672, nombre: "Derecho",                                            universidad: "UAH",  ccaa: "MAD", corte:  8.328, ponderaciones: { "Latín II": 0.2, "Matemáticas CCSS II": 0.1, "Historia del Arte": 0.1 } },
+  { id: 673, nombre: "Ingeniería en Sistemas de Información",              universidad: "UAH",  ccaa: "MAD", corte:  8.139, ponderaciones: { "Matemáticas II": 0.2, "Física": 0.1 } },
+  { id: 674, nombre: "Comunicación Audiovisual",                           universidad: "UAH",  ccaa: "MAD", corte:  7.890, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1, "Fundamentos del Arte II": 0.1 } },
+  { id: 675, nombre: "Economía",                                           universidad: "UAH",  ccaa: "MAD", corte:  7.664, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2, "Matemáticas II": 0.1 } },
+  { id: 676, nombre: "Finanzas",                                           universidad: "UAH",  ccaa: "MAD", corte:  7.541, ponderaciones: { "Matemáticas CCSS II": 0.2, "Economía de la Empresa": 0.2 } },
+  { id: 677, nombre: "Ciencias Ambientales",                               universidad: "UAH",  ccaa: "MAD", corte:  7.106, ponderaciones: { "Biología": 0.2, "Química": 0.1 } },
+  { id: 678, nombre: "Estudios Ingleses",                                  universidad: "UAH",  ccaa: "MAD", corte:  6.864, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
+  { id: 679, nombre: "Historia",                                           universidad: "UAH",  ccaa: "MAD", corte:  5.710, ponderaciones: { "Historia del Arte": 0.2, "Latín II": 0.1, "Geografía": 0.1 } },
+  { id: 680, nombre: "Lenguas Modernas y Traducción",                      universidad: "UAH",  ccaa: "MAD", corte:  5.659, ponderaciones: { "Literatura Castellana": 0.2, "Historia del Arte": 0.1 } },
 ];
+
+const CCAA_CONFIG = {
+  CYL: { nombre: "Castilla y León", universidades: { UVA: "Univ. de Valladolid", USAL: "Univ. de Salamanca", UBU: "Univ. de Burgos", ULE: "Univ. de León" } },
+  MAD: { nombre: "Madrid", universidades: { UCM: "Univ. Complutense", UAM: "Univ. Autónoma", UC3M: "Univ. Carlos III", URJC: "Univ. Rey Juan Carlos", UPM: "Univ. Politécnica", UAH: "Univ. de Alcalá" } },
+};
+const UNIV_NOMBRES = Object.values(CCAA_CONFIG).reduce((acc, c) => Object.assign(acc, c.universidades), {});
 
 // ─── LÓGICA ───────────────────────────────────────────────────────────────────
 
@@ -570,18 +829,39 @@ function calcularNota(bach, ebau, ponderaciones, notasEsp) {
 
 // ─── UI ───────────────────────────────────────────────────────────────────────
 
-const selUniv = document.getElementById('sel-universidad');
+const selCcaa  = document.getElementById('sel-ccaa');
+const selUniv  = document.getElementById('sel-universidad');
 const selGrado = document.getElementById('sel-grado');
 const nBach = document.getElementById('n-bach');
 const nEbau = document.getElementById('n-ebau');
 
 let notasEsp = {};
 
+function poblarUniversidades() {
+  const ccaa = selCcaa.value;
+  selUniv.innerHTML = '<option value="">Todas</option>';
+  const univs = ccaa ? CCAA_CONFIG[ccaa]?.universidades : UNIV_NOMBRES;
+  if (univs) {
+    Object.entries(univs).forEach(([code, name]) => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = `${code} — ${name}`;
+      selUniv.appendChild(opt);
+    });
+  }
+}
+
 function poblarGrados() {
+  const ccaa = selCcaa.value;
   const univ = selUniv.value;
   selGrado.innerHTML = '<option value="">— Selecciona un grado —</option>';
-  const filtrados = univ ? GRADOS.filter(g => g.universidad === univ) : GRADOS;
-  [...filtrados].sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(g => {
+  const filtrados = GRADOS.filter(g => {
+    const gradoCcaa = g.ccaa || 'CYL';
+    if (ccaa && gradoCcaa !== ccaa) return false;
+    if (univ && g.universidad !== univ) return false;
+    return true;
+  });
+  [...filtrados].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')).forEach(g => {
     const opt = document.createElement('option');
     opt.value = g.id;
     opt.textContent = univ ? g.nombre : `${g.nombre} (${g.universidad})`;
@@ -713,8 +993,8 @@ function actualizar() {
   }
 
   if (grado) {
-    const mismoGrado = GRADOS.filter(g => g.nombre === grado.nombre);
-    const univNombres = { UVA: 'Univ. de Valladolid', USAL: 'Univ. de Salamanca', UBU: 'Univ. de Burgos', ULE: 'Univ. de León' };
+    const gradoCcaa = grado.ccaa || 'CYL';
+    const mismoGrado = GRADOS.filter(g => g.nombre === grado.nombre && (g.ccaa || 'CYL') === gradoCcaa);
     if (mismoGrado.length > 1) {
       univCard.style.display = 'block';
       const tbody = document.getElementById('univ-tbody');
@@ -737,7 +1017,7 @@ function actualizar() {
         const notaStr = notaG !== null ? fmt(notaG) : '—';
         const espUsada = selG.length ? selG.map(s => `${s.asig} ×${s.pond}`).join(', ') : '—';
         tr.innerHTML = `
-          <td>${univNombres[g.universidad] || g.universidad}${g.id === grado.id ? ' ★' : ''}</td>
+          <td>${UNIV_NOMBRES[g.universidad] || g.universidad}${g.id === grado.id ? ' ★' : ''}</td>
           <td><span class="corte-num">${g.corte.toFixed(3)}</span></td>
           <td>${notaStr}</td>
           <td>${diffHtml}</td>
@@ -1007,10 +1287,12 @@ function actualizarTemas() {
   });
 }
 
+selCcaa.addEventListener('change', () => { poblarUniversidades(); poblarGrados(); });
 selUniv.addEventListener('change', poblarGrados);
 selGrado.addEventListener('change', () => { poblarEspGrid(); actualizar(); actualizarTemas(); });
 [nBach, nEbau].forEach(el => el.addEventListener('input', actualizar));
 
+poblarUniversidades();
 poblarGrados();
 
 // Mostrar aviso de notas nuevas a partir del 9 de julio de 2026
